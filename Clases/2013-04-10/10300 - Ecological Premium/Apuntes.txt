@@ -1,0 +1,22 @@
+Datos conocidos:
+* Área de la granja (m²).
+* Número de animales.
+* Grado de uso de equipo y prácticas ecológicas (entero mayor que 0).
+
+Procedimiento:
+* Obtener área media que ocupa un solo animal (m²).
+* Multiplicar por el grado de amigabilidad con el ambiente (premium por animal).
+* Multiplicar por el número de animales del granjero (premium final).
+
+Entrada:
+1. Número de casos de test a evaluar (n < 20).
+Por cada caso de test:
+	1. Número de granjeros (0 < f < 20).
+	Por cada granjero, una línea que tendrá tres enteros:
+		1. Área de la granja.
+		2. Número de animales.
+		3. Grado de amigabilidad con el ambiente.
+
+Salida:
+* Resultados de cada test, cada uno en una línea.
+* No debe imprimirse una línea en blanco.
