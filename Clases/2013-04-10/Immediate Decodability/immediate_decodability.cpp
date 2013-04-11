@@ -14,8 +14,8 @@ binary_tree;
 
 struct binary_tree
 	tree_node[MAX_TREE_NODES] = {0},
-	*p_tree_node_iterator,
-	*p_last_tree_node;
+	*p_tree_node_iterator = tree_node,
+	*p_last_tree_node = tree_node;
 
 
 inline void RESET_LAST_NODE()
@@ -41,10 +41,10 @@ inline void INSERT_TREE_NODE(struct binary_tree *&path)
 
 inline void GO(unsigned int dir)
 {
-	struct binary_tree **destination = &(p_tree_node_iterator->path[dir]);
+	struct binary_tree *&destination = p_tree_node_iterator->path[dir];
 	if (!destination)
-		INSERT_TREE_NODE(*destination);
-	p_tree_node_iterator = *destination;
+		INSERT_TREE_NODE(destination);
+	p_tree_node_iterator = destination;
 }
 
 inline void NEW_CODE()
@@ -66,8 +66,8 @@ inline bool PATH_CONTINUES()
 
 // Output templates.
 const char *output[] = {
-	"Set %d is immediately decodable",
-	"Set %d is not immediately decodable"
+	"Set %d is not immediately decodable",
+	"Set %d is immediately decodable"
 };
 
 
@@ -83,7 +83,7 @@ int main ()
 		// End of group.
 		if (c == '9')
 		{
-			fprintf(stdin, output[is_immediate_decodable], set);
+			fprintf(stdout, output[is_immediate_decodable], set);
 			NEW_GROUP();
 			is_immediate_decodable = true;
 			++set;
