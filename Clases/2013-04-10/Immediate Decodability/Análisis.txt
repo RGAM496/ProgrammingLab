@@ -1,0 +1,13 @@
+Un conjunto de símbolos es inmediatamente decodificable si ningún código de un símbolo es el prefijo del código de otro símbolo.
+
+Se asume que:
+* Todos los códigos son binarios.
+* No hay códigos iguales en un conjunto de códigos.
+* Cada código tiene al menos un bit y no más de diez bits.
+* Cada conjunto de códigos tiene al menos dos códigos y no más de ocho.
+
+Entrada (desde archivo):
+1. El archivo contiene grupos de conjuntos de números.
+2. Los grupos se separan por el caracter 9.
+3. Cada grupo contiene un conjunto de códigos, escritos con 0 y 1.
+4. Todos los números se separan con un espacio simple.
