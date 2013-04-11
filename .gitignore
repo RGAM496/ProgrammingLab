@@ -161,3 +161,30 @@ pip-log.txt
 
 # Mac crap
 .DS_Store
+
+
+############
+## C / C++
+############
+
+# Object files
+*.slo
+*.lo
+*.o
+
+# Libraries
+*.lib
+*.lai
+*.la
+*.a
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
