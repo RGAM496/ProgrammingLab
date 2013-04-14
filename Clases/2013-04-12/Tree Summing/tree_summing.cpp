@@ -28,7 +28,7 @@ inline bool next_tree (int &n)
 }
 
 
-std::vector<int> tree_sum(20);
+std::vector<int> tree_sum;
 int depth, compare;
 
 
@@ -43,20 +43,22 @@ bool parse_subtree()
 		is_a_leaf = false;
 		n += tree_sum[depth];
 		++depth;
-		tree_sum[depth] = n;
+		tree_sum.push_back(n);
 		if (parse_subtree())
 			return true;
 		--depth;
+		tree_sum.pop_back();
 	}
 
 	if (next_tree(n)) {
 		is_a_leaf = false;
 		n += tree_sum[depth];
 		++depth;
-		tree_sum[depth] = n;
+		tree_sum.push_back(n);
 		if (parse_subtree())
 			return true;
 		--depth;
+		tree_sum.pop_back();
 	}
 
 	get_char(n);
@@ -90,10 +92,14 @@ int main ()
 {
 	int n;
 
+	tree_sum.reserve(32);
+
 	while (get_int(compare) > 0)
 	{
-		if (next_tree(tree_sum[0]))
+		tree_sum.resize(0);
+		if (next_tree(n))
 		{
+			tree_sum.push_back(n);
 			depth = 0;
 			if (parse_subtree()){
 				puts("yes");
