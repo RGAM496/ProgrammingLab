@@ -10,6 +10,16 @@ inline void swap (C &a, C &b)
 	b = c;
 }
 
+template <class C>
+inline void sort(C &x, C &y, C &z) {
+	if (x > y)
+		swap(x, y);
+	if (x > z)
+		swap(x, z);
+	if (y > z)
+		swap(y, z);
+}
+
 
 struct Block
 {
@@ -41,18 +51,56 @@ struct BlockTree
 	int
 		x,
 		y,
-		h;
+		h,
+		max_h;
+
 	BlockTree
 		*child,
 		*siebling;
+
+	inline void reset_height() {
+		max_h = 0;
+	}
+
+	inline void reset() {
+		child = 0;
+		siebling = 0;
+		reset_height();
+	}
+
+	inline int max_height() {
+		if (max_h)
+			return max_h;
+		int mh;
+		for (BlockTree *ch = child; ch; ch = ch->siebling) {
+			mh = ch->max_height();
+			if (max_h < mh)
+				max_h = mh;
+		}
+		return max_h;
+	}
+};
+
+#define MAX_BLOCKS 30
+#define MAX_COMBINATIONS (3*MAX_BLOCKS)
+extern struct BlockGraph graph[MAX_COMBINATIONS][MAX_COMBINATIONS];
+
+struct BlockGraph
+{
+	int
+		x,
+		y,
+		h;
+
+	bool dirty;
 };
 
 
-#define MAX_BLOCKS 30
 Block
-	block[MAX_BLOCKS];
+	block[MAX_COMBINATIONS];
 BlockTree
-	block_tree[3*MAX_BLOCKS];
+	block_tree[MAX_COMBINATIONS];
+struct BlockGraph graph[MAX_COMBINATIONS][MAX_COMBINATIONS];
 int partial_height[MAX_BLOCKS];
 
 
