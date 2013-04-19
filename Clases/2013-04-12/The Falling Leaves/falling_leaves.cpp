@@ -56,27 +56,26 @@ public:
 		most_right = last_used;
 	}
 
-	node<E> * go_head () {return v;}
-	node<E> * go_most_left () {return most_left;}
-	node<E> * go_most_right () {return most_right;}
+	inline node<E> * go_head () {return v;}
+	inline node<E> * go_most_left () {return most_left;}
+	inline node<E> * go_most_right () {return most_right;}
 
-	node<E> * go_left (node<E> *p) {
+	inline node<E> * go_left (node<E> *p) {
 		if (p == most_left)
 			new_left();
 		return p->left;
 	}
 
-	node<E> * go_right (node<E> *p) {
+	inline node<E> * go_right (node<E> *p) {
 		if (p == most_right)
 			new_right();
 		return p->right;
 	}
 
 	void print () {
-		for (node<E> *p = most_left; p != most_right; p = p->right) {
+		for (node<E> *p = most_left; p; p = p->right) {
 			printf("%d ", p->value);
 		}
-		putchar('\n');
 		putchar('\n');
 	}
 };
@@ -88,20 +87,40 @@ inline int get_int (int &n)
 }
 
 
+vector<int,80> tree;
+int n = EMPTY;
+
+
+template <typename E>
+void parse (node<E> *p)
+{
+	p->value += n;
+
+	get_int(n);
+	if (n != EMPTY)
+		parse(tree.go_left(p));
+
+	get_int(n);
+	if (n != EMPTY)
+		parse(tree.go_right(p));
+}
+
+
 int main ()
 {
-	vector<int,80> v;
-	int n = EMPTY, test_case = 1;
+	int test_case = 1;
+	node<int> *head;
 
 	get_int(n);
 	while (n != EMPTY)
 	{
-		v.reset();
+		tree.reset();
 
-		/* Do stuff */
+		head = tree.go_head();
+		parse(head);
 
-		printf("Case %d:\n", test_case);
-		v.print();
+		printf("\nCase %d:\n", test_case);
+		tree.print();
 
 		get_int(n);
 		++test_case;
