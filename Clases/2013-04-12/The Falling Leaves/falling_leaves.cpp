@@ -73,10 +73,11 @@ public:
 	}
 
 	void print () {
-		for (node<E> *p = most_left; p; p = p->right) {
+		node<E> *p;
+		for (p = most_left; p != most_right; p = p->right) {
 			printf("%d ", p->value);
 		}
-		putchar('\n');
+		printf("%d\n", p->value);
 	}
 };
 
