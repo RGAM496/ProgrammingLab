@@ -46,7 +46,7 @@ public:
 		return &(node.front());
 	}
 
-	Node * child (Node *o, size_t ch) {
+	Node * child (Node *p, size_t ch) {
 		Node *&child = p->child[ch];
 		if (child == 0)
 			child = new_child();
@@ -55,14 +55,14 @@ public:
 
 	Tree () {
 		node.reserve(64);
-		node.size(1);
+		node.resize(1);
 	}
 };
 
 
 int main ()
 {
-	#define MAX_DEPTH
+	#define MAX_DEPTH 5
 	int total_cases, c, trees_parsed;
 	Tree tree;
 	Node *node[MAX_DEPTH];
@@ -90,7 +90,7 @@ int main ()
 				{
 					++depth;
 					numbering[depth] = 0;
-					node[depth] = tree.go_child(node[depth-1], 0);
+					node[depth] = tree.child(node[depth-1], 0);
 					break;
 				}
 
@@ -125,7 +125,7 @@ int main ()
 				{
 					++depth;
 					numbering[depth] = 0;
-					node[depth] = tree.go_child(node[depth-1], 0);
+					node[depth] = tree.child(node[depth-1], 0);
 					break;
 				}
 
