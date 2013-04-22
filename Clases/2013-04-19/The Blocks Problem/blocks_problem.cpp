@@ -21,10 +21,12 @@ struct Table
 	vector<Block> block;
 	vector<Block*> position;
 	Block *first_block;
+	int total_blocks;
 	
 	
 	Table (int total_blocks) : block(total_blocks), position(total_blocks) {
 		first_block = &block[0];
+		this->total_blocks = total_blocks;
 		for (int i = 0; i < total_blocks; ++i) {
 			position[i] = first_block + i;
 			block[i].position = i;
@@ -57,32 +59,34 @@ struct Table
 		if (p == pb)
 			return 0;
 
-		do {
+		while (p->next_over != pb) {
 			p = p->next_over;
 		}
-		while (p->next_over != pb);
 
 		return p;
 	}
 	
 	void return_blocks_over (Block *b) {
 		Block
-			*over = b->next_over,
+			*over,
 			*last_in_position;
 		int over_number;
 
+		over = b->next_over;
 		while (over) {
 			over_number = block_number(over);
+			putchar(over_number+'0');
 			last_in_position = last_block_in_position(over_number);
 			
 			if (last_in_position)
 				last_in_position->next_over = over;
 			else
 				position[over_number] = over;
+			over->position = over_number;
 			
+			b->next_over = 0;
 			b = over;
 			over = b->next_over;
-			b->next_over = 0;
 		}
 	}
 	
@@ -108,6 +112,10 @@ struct Table
 			pb->next_over = p;
 			position[a] = 0;
 		}
+		while (pb->next_over) {
+			pb = pb->next_over;
+			pb->position = b;
+		}
 	}
 	
 	void move_over (int a, int b) {
@@ -119,6 +127,8 @@ struct Table
 		return_blocks_over(first_block + a);
 
 		pb = first_block + b;
+		while (pb->next_over)
+			pb = pb->next_over;
 		p = last_block_before(a);
 		if (p) {
 			p->next_over->next_over = pb->next_over;
@@ -130,6 +140,10 @@ struct Table
 			p->next_over = pb->next_over;
 			pb->next_over = p;
 			position[a] = 0;
+		}
+		while (pb->next_over) {
+			pb = pb->next_over;
+			pb->position = b;
 		}
 	}
 	
@@ -154,6 +168,10 @@ struct Table
 			pb->next_over = p;
 			position[a] = 0;
 		}
+		while (pb->next_over) {
+			pb = pb->next_over;
+			pb->position = b;
+		}
 	}
 	
 	void pile_over (int a, int b) {
@@ -163,19 +181,57 @@ struct Table
 		Block *p, *pb;
 
 		pb = first_block + b;
+		while (pb->next_over)
+			pb = pb->next_over;
 		p = last_block_before(a);
 		if (p) {
-			p->next_over->next_over = pb->next_over;
 			pb->next_over = p->next_over;
 			p->next_over = 0;
 		}
 		else {
 			p = first_block + a;
-			p->next_over = pb->next_over;
 			pb->next_over = p;
 			position[a] = 0;
 		}
+		while (pb->next_over) {
+			pb = pb->next_over;
+			pb->position = b;
+		}
 	}
+
+	void print() {
+		Block *p;
+		for (int i = 0; i < total_blocks; ++i)
+		{
+			printf("\n%d:", i);
+			p = position[i];
+			if (p) {
+				do {
+					printf(" %d", block_number(p));
+					p = p->next_over;
+				}
+				while (p);
+			}
+		}
+	}
+
+	/*void debug() {
+		Block *p;
+		for (int i = 0; i < total_blocks; ++i)
+		{
+			printf("\n%d:", i);
+			p = position[i];
+			if (p) {
+				do {
+					printf(" %d", block_number(p));
+					//printf("\t%d (%d)", block_number(p), p->position);
+					p = p->next_over;
+				}
+				while (p);
+			}
+		}
+		putchar('\n');
+	}*/
 };
 
 
@@ -198,10 +254,14 @@ int main ()
 				table.move_over(a,b);
 		else
 			if (strcmp(command[1], "onto") == 0)
-				table.move_onto(a,b);
+				table.pile_onto(a,b);
 			else
-				table.move_over(a,b);
+				table.pile_over(a,b);
+
+		scanf("%s", command[0]);
 	}
+
+	table.print();
 
 	return 0;
 }
