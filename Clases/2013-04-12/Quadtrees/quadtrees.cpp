@@ -11,6 +11,7 @@ using namespace std;
 #define WHITE 0
 #define SIDE 32
 #define MAX_CHILDS 4
+#define MAX_DEPTH 6
 
 
 struct Node
@@ -55,7 +56,8 @@ public:
 	}
 
 	int count (Node *p, int total_pixels) {
-		switch (p->value())
+		printf("%c: [%d] %d\n", p->value, p-head(), total_pixels);
+		switch (p->value)
 		{
 			case FULL: {
 				return total_pixels;
@@ -86,7 +88,6 @@ public:
 
 int main ()
 {
-	#define MAX_DEPTH 5
 	int total_cases, c, trees_parsed;
 	Tree tree;
 	Node *node[MAX_DEPTH];
@@ -99,22 +100,29 @@ int main ()
 		tree.reset();
 
 		/* First parse. */
+		puts("\n\nFirst parse.");
 
 		depth = 0;
 		node[depth] = tree.head();
 		numbering[depth] = 0;
 
 		c = getchar();
+		printf("\n%c: [%d] %d %d", c, node[depth]-tree.head(), depth, numbering[depth]);
 		while (c != '\n')
 		{
 			node[depth]->value = c;
+			++numbering[depth];
+
 			switch (c)
 			{
 				case PARENT:
 				{
 					++depth;
 					numbering[depth] = 0;
+					putchar('c');
 					node[depth] = tree.child(node[depth-1], 0);
+					++node[depth-1];
+					putchar('h');
 					break;
 				}
 
@@ -122,8 +130,7 @@ int main ()
 				case EMPTY:
 				{
 					++node[depth];
-					++numbering[depth];
-					if (numbering[depth] == MAX_CHILDS) {
+					if (numbering[depth] >= MAX_CHILDS) {
 						--depth;
 					}
 					break;
@@ -131,17 +138,24 @@ int main ()
 			}
 
 			c = getchar();
+			printf("\n%c: [%d] %d %d", c, node[depth]-tree.head(), depth, numbering[depth]);
 		}
 
+		printf("There are %d black pixels.\n", tree.count());
+
 		/* Second parse. */
+		puts("\n\nSecond parse.");
 
 		depth = 0;
 		node[depth] = tree.head();
 		numbering[depth] = 0;
 
 		c = getchar();
+		printf("\n%c: [%d] %d %d", c, node[depth]-tree.head(), depth, numbering[depth]);
 		while (c != EOF && c != '\n')
 		{
+			++numbering[depth];
+
 			switch (c)
 			{
 				case PARENT:
@@ -156,7 +170,10 @@ int main ()
 						{
 							++depth;
 							numbering[depth] = 0;
+							putchar('c');
 							node[depth] = tree.child(node[depth-1], 0);
+							++node[depth-1];
+							putchar('h');
 							break;
 						}
 
@@ -177,7 +194,6 @@ int main ()
 				case EMPTY:
 				{
 					++node[depth];
-					++numbering[depth];
 					if (numbering[depth] == MAX_CHILDS) {
 						--depth;
 					}
@@ -186,8 +202,10 @@ int main ()
 			}
 
 			c = getchar();
+			printf("\n%c: [%d] %d %d", c, node[depth]-tree.head(), depth, numbering[depth]);
 		}
 
+		puts("\nBP");
 		printf("There are %d black pixels.\n", tree.count());
 	}
 
