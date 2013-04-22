@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <cstring>
 #include <vector>
 
 using namespace std;
@@ -180,5 +181,27 @@ struct Table
 
 int main ()
 {
+	int total_blocks, a, b;
+	char command[2][5];
+	scanf("%d", &total_blocks);
+	Table table(total_blocks);
+
+	scanf("%s", command[0]);
+	while (strcmp(command[0], "quit"))
+	{
+		scanf("%d %s %d", &a, command[1], &b);
+
+		if (strcmp(command[0], "move") == 0)
+			if (strcmp(command[1], "onto") == 0)
+				table.move_onto(a,b);
+			else
+				table.move_over(a,b);
+		else
+			if (strcmp(command[1], "onto") == 0)
+				table.move_onto(a,b);
+			else
+				table.move_over(a,b);
+	}
+
 	return 0;
 }
