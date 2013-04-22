@@ -34,6 +34,7 @@ class Tree
 public:
 
 	void reset() {
+		node.resize(1);
 		node[0].value = EMPTY;
 	}
 
@@ -53,9 +54,32 @@ public:
 		return child;
 	}
 
+	int count (Node *p, int total_pixels) {
+		switch (p->value())
+		{
+			case FULL: {
+				return total_pixels;
+			}
+			case EMPTY: {
+				return 0;
+			}
+			case PARENT: {
+				int r = 0, child_pixels = total_pixels / 2;
+				r += count(p->child[0], child_pixels);
+				r += count(p->child[1], child_pixels);
+				r += count(p->child[2], child_pixels);
+				r += count(p->child[3], child_pixels);
+				return r;
+			}
+		}
+	}
+
+	int count () {
+		return count (head(), SIDE*SIDE);
+	}
+
 	Tree () {
 		node.reserve(64);
-		node.resize(1);
 	}
 };
 
@@ -118,18 +142,38 @@ int main ()
 		c = getchar();
 		while (c != EOF && c != '\n')
 		{
-			node[depth]->value = c;
 			switch (c)
 			{
 				case PARENT:
 				{
-					++depth;
-					numbering[depth] = 0;
-					node[depth] = tree.child(node[depth-1], 0);
+					switch (node[depth]->value)
+					{
+						case EMPTY:
+						{
+							node[depth]->value = c;
+						}
+						case PARENT:
+						{
+							++depth;
+							numbering[depth] = 0;
+							node[depth] = tree.child(node[depth-1], 0);
+							break;
+						}
+
+						case FULL:
+						{
+							node[depth]->value = c;
+							break;
+						}
+					}
+					
 					break;
 				}
 
 				case FULL:
+				{
+					node[depth]->value = c;
+				}
 				case EMPTY:
 				{
 					++node[depth];
@@ -143,6 +187,8 @@ int main ()
 
 			c = getchar();
 		}
+
+		printf("There are %d black pixels.\n", tree.count());
 	}
 
 	return 0;
