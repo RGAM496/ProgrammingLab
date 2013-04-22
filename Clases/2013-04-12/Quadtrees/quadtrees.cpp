@@ -88,7 +88,7 @@ public:
 	}
 
 	Tree () {
-		node.reserve(64);
+		node.reserve(1365);
 	}
 };
 
