@@ -44,6 +44,13 @@ public:
 		return &(node.back());
 	}
 
+	void new_childs (Node * p) {
+		p->child[0] = new_child();
+		p->child[1] = new_child();
+		p->child[2] = new_child();
+		p->child[3] = new_child();
+	}
+
 	Node * head () {
 		return &(node.front());
 	}
@@ -51,7 +58,8 @@ public:
 	Node * child (Node *p, size_t ch) {
 		Node *&child = p->child[ch];
 		if (child == 0)
-			child = new_child();
+			new_childs(p);
+		printf(" [%d]", child-head());
 		return child;
 	}
 
@@ -119,10 +127,8 @@ int main ()
 				{
 					++depth;
 					numbering[depth] = 0;
-					putchar('c');
 					node[depth] = tree.child(node[depth-1], 0);
 					++node[depth-1];
-					putchar('h');
 					break;
 				}
 
@@ -207,6 +213,7 @@ int main ()
 
 		puts("\nBP");
 		printf("There are %d black pixels.\n", tree.count());
+		--total_cases;
 	}
 
 	return 0;
