@@ -8,7 +8,7 @@ using namespace std;
 
 struct Block
 {
-	position;
+	int position;
 	Block *next_over;
 	
 	Block () : next_over(0) {}
@@ -22,7 +22,7 @@ struct Table
 	Block *first_block;
 	
 	
-	Table (int total_blocks) : block(total_blocks) position(total_blocks) {
+	Table (int total_blocks) : block(total_blocks), position(total_blocks) {
 		first_block = &block[0];
 		for (int i = 0; i < total_blocks; ++i) {
 			position[i] = first_block + i;
@@ -47,42 +47,138 @@ struct Table
 		
 		return p;
 	}
+
+	Block * last_block_before (int b) {
+		Block
+			*p = position[block[b].position],
+			*pb = first_block + b;
+
+		if (p == pb)
+			return 0;
+
+		do {
+			p = p->next_over;
+		}
+		while (p->next_over != pb);
+
+		return p;
+	}
 	
 	void return_blocks_over (Block *b) {
 		Block
 			*over = b->next_over,
 			*last_in_position;
 		int over_number;
-		
 
 		while (over) {
 			over_number = block_number(over);
 			last_in_position = last_block_in_position(over_number);
 			
-			
+			if (last_in_position)
+				last_in_position->next_over = over;
+			else
+				position[over_number] = over;
 			
 			b = over;
 			over = b->next_over;
+			b->next_over = 0;
 		}
 	}
 	
 	void move_onto (int a, int b) {
 		if (is_ilegal(a,b))
 			return;
+
+		Block *p, *pb;
+
+		return_blocks_over(first_block + a);
+		return_blocks_over(first_block + b);
+
+		pb = first_block + b;
+		p = last_block_before(a);
+		if (p) {
+			p->next_over->next_over = pb->next_over;
+			pb->next_over = p->next_over;
+			p->next_over = 0;
+		}
+		else {
+			p = first_block + a;
+			p->next_over = pb->next_over;
+			pb->next_over = p;
+			position[a] = 0;
+		}
 	}
 	
 	void move_over (int a, int b) {
 		if (is_ilegal(a,b))
 			return;
+
+		Block *p, *pb;
+
+		return_blocks_over(first_block + a);
+
+		pb = first_block + b;
+		p = last_block_before(a);
+		if (p) {
+			p->next_over->next_over = pb->next_over;
+			pb->next_over = p->next_over;
+			p->next_over = 0;
+		}
+		else {
+			p = first_block + a;
+			p->next_over = pb->next_over;
+			pb->next_over = p;
+			position[a] = 0;
+		}
 	}
 	
 	void pile_onto (int a, int b) {
 		if (is_ilegal(a,b))
 			return;
+
+		Block *p, *pb;
+
+		return_blocks_over(first_block + b);
+
+		pb = first_block + b;
+		p = last_block_before(a);
+		if (p) {
+			p->next_over->next_over = pb->next_over;
+			pb->next_over = p->next_over;
+			p->next_over = 0;
+		}
+		else {
+			p = first_block + a;
+			p->next_over = pb->next_over;
+			pb->next_over = p;
+			position[a] = 0;
+		}
 	}
 	
 	void pile_over (int a, int b) {
 		if (is_ilegal(a,b))
 			return;
+
+		Block *p, *pb;
+
+		pb = first_block + b;
+		p = last_block_before(a);
+		if (p) {
+			p->next_over->next_over = pb->next_over;
+			pb->next_over = p->next_over;
+			p->next_over = 0;
+		}
+		else {
+			p = first_block + a;
+			p->next_over = pb->next_over;
+			pb->next_over = p;
+			position[a] = 0;
+		}
 	}
 };
+
+
+int main ()
+{
+	return 0;
+}
