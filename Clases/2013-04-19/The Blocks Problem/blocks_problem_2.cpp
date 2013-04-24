@@ -31,6 +31,7 @@ struct Table
 
 	void print();
 	void debug();
+	void debug(Block *b);
 
 	inline bool is_ilegal (int a, int b);
 
@@ -215,23 +216,52 @@ void Table::print () {
 }
 
 
-void Table::debug () {
+void Table::debug ()
+{
 	Block *p;
 	printf("\nBlock[0]: %p\nPosition[0]: %p\n", &block[0], &position[0]);
 	for (int i = 0; i < total_blocks; ++i)
 	{
-		printf("\n%d:", i);
+		printf("\n%d [", i);
+		debug(position[i].down);
+		printf(", ");
+		debug(position[i].up);
+		putchar(']');
 		p = position[i].up;
 		if (p) {
 			do {
 				//printf(" %d", block_number(p));
-				printf("\t%d (%d) [%p, %p]", block_number(p), p->position, p->down, p->up);
+				printf("\t%d (%d) [", block_number(p), p->position);
+				debug(p->down);
+				printf(", ");
+				debug(p->up);
+				putchar(']');
 				p = p->up;
 			}
 			while (p);
 		}
 	}
 	putchar('\n');
+}
+
+void Table::debug (Block *b)
+{
+	char p;
+	int i;
+	if (b) {
+		i = b - first_block;
+		if (0 <= i && i <= 9)
+			p = 'b';
+		else {
+			i = b - &position[0];
+			p = 'p';
+		}
+	}
+	else {
+		p = '+';
+		i = 0;
+	}
+	printf("%c%d", p, i);
 }
 
 
