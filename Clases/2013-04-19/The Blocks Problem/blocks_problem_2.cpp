@@ -55,8 +55,8 @@ Table::Table (int num_blocks)
 	for (int i = 0; i < total_blocks; ++i)
 	{
 		block[i].position = i;
-		position[i].up = &block[i];
-		position[i].down = &block[i];
+		enlazar (position[i], block[i]);
+		set_as_last_block (&block[i]);
 	}
 }
 
@@ -86,17 +86,17 @@ Block * Table::last_block_in_position (int pos)
 
 void Table::set_as_last_block (Block *b)
 {
-	if (b)
-	{
-		b->up = 0;
-		position[b->position].down = b;
-	}
+	b->up = 0;
+	position[b->position].down = b;
 }
 
 
 void Table::put_over (Block *b, int pos)
 {
-	set_as_last_block (b->down);
+	if (b->down != &position[b->position])
+		set_as_last_block (b->down);
+	else
+		position[b->position].up = 0;
 	enlazar (last_block_in_position(pos), b);
 	b->position = pos;
 }
@@ -104,7 +104,14 @@ void Table::put_over (Block *b, int pos)
 
 void Table::return_block (Block *b)
 {
-	put_over (b, block_number(b));
+	int pos = block_number(b);
+	if (b->down)
+		b->down->up = b->up;
+	if (b->up)
+		b->up->down = b->down;
+	enlazar (last_block_in_position(pos), b);
+	b->position = pos;
+	set_as_last_block (b);
 }
 
 void Table::return_blocks_over (Block *b)
@@ -145,15 +152,15 @@ void Table::move_onto (int a, int b)
 	Block
 		*pa = first_block + a,
 		*pb = first_block + b;
+	puts("Legal");
 
 	return_blocks_over (pa);
 	return_blocks_over (pb);
-	puts("R");
+	puts("Returned");
 
 	put_over (pa, pb->position);
-	puts("P");
+	puts("Putted Over");
 	update_blocks_over (pa);
-	puts("U");
 }
 
 
@@ -162,6 +169,16 @@ void Table::move_over (int a, int b)
 {
 	if (is_ilegal(a,b))
 		return;
+
+	Block
+		*pa = first_block + a,
+		*pb = first_block + b;
+
+	return_blocks_over (pa);
+	return_blocks_over (pb);
+
+	put_over (pa, pb->position);
+	update_blocks_over (pa);
 }
 
 
@@ -198,8 +215,9 @@ void Table::print () {
 }
 
 
-void Table::debug() {
+void Table::debug () {
 	Block *p;
+	printf("\nBlock[0]: %p\nPosition[0]: %p\n", &block[0], &position[0]);
 	for (int i = 0; i < total_blocks; ++i)
 	{
 		printf("\n%d:", i);
@@ -207,7 +225,7 @@ void Table::debug() {
 		if (p) {
 			do {
 				//printf(" %d", block_number(p));
-				printf("\t%d (%d)", block_number(p), p->position);
+				printf("\t%d (%d) [%p, %p]", block_number(p), p->position, p->down, p->up);
 				p = p->up;
 			}
 			while (p);
