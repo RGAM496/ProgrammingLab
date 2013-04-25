@@ -8,14 +8,17 @@ struct stack
 	int v[MAX_LENGTH];
 	int *front, *rear;
 
-	inline void reset () {front = rear = v - 1;}
+	inline void reset () {rear = front;}
 
 	inline bool is_empty () {return front == rear;}
 
-	inline void push (int c) {*rear++ = c;}
+	inline void push (int c) {*++rear = c;}
 	inline int pop () {return *rear--;}
 
+	stack () {front = v - 1;}
+
 	/*void debug () {
+		printf ("[%d]", rear-front);
 		for (int *p = front + 1; p <= rear; ++p)
 			printf (" %c", *p);
 		putchar('\n');
@@ -33,6 +36,7 @@ int main ()
 	bool is_correct;
 
 	scanf("%d", &test_cases);
+	getchar();
 
 	while (test_cases)
 	{
@@ -75,7 +79,7 @@ int main ()
 
 			c = getchar();
 		}
-		//pila.debug();
+
 		if (is_correct)
 			puts(pila.is_empty() ? "yes" : "no");
 		else {
