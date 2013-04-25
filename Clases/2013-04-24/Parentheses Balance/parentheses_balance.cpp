@@ -92,4 +92,6 @@ int main ()
 
 		--test_cases;
 	}
+
+	return 0;
 }
