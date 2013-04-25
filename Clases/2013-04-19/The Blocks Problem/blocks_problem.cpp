@@ -1,238 +1,250 @@
 #include <cstdio>
 #include <cstring>
-#include <vector>
-
-using namespace std;
-
-#define MAX_BLOCKS 25;
 
 
 struct Block
 {
-	int position;
-	Block *next_over;
-	
-	Block () : next_over(0) {}
+	Block
+		*up,
+		*down,
+		*position;
+
+	inline bool is_final () {return up == position;}
+	inline void set_final () {position->down = this;}
 };
 
 
 struct Table
 {
-	vector<Block> block;
-	vector<Block*> position;
-	Block *first_block;
+	Block
+		*block,
+		*position;
 	int total_blocks;
-	
-	
-	Table (int total_blocks) : block(total_blocks), position(total_blocks) {
-		first_block = &block[0];
-		this->total_blocks = total_blocks;
-		for (int i = 0; i < total_blocks; ++i) {
-			position[i] = first_block + i;
-			block[i].position = i;
-		}
+
+	Table (int max_blocks);
+	~Table ();
+
+	inline int block_number (Block *b) {return b - block;}
+	inline int position_number (Block *p) {return p - position;}
+	inline Block * last_block (int pos) {return position[pos].down;}
+	inline Block * last_block (Block *b) {return b->position->down;}
+
+	inline void desenlazar (Block *b);
+	inline void desenlazar (Block *ini, Block *fin);
+	inline void enlazar (Block *under, Block *over);
+	inline void enlazar (Block *under, Block *over_ini, Block *over_fin);
+	inline void retornar (Block *b);
+	inline void retornar_encima (Block *b);
+	inline void put_over (Block *a, Block *b);
+
+	inline bool is_ilegal (int a, int b);
+	void move_onto (int a, int b);
+	void move_over (int a, int b);
+	void pile_onto (int a, int b);
+	void pile_over (int a, int b);
+
+	void print ();
+
+	int debug (int pos) {
+		if (block + pos < position)
+			return pos;
+		return -(pos - total_blocks);
 	}
-	
-	int block_number (Block *p) {
-		return p - first_block;
+	void debug (Block *b) {
+		printf ("% d (% d, % d) [% d]\n",
+			debug ((int)(b - block)),
+			debug ((int)(b->down - block)),
+			debug ((int)(b->up - block)),
+			debug ((int)(b->position - block)));
 	}
-	
-	bool is_ilegal (int a, int b) {
-		return (a == b) || (block[a].position == block[b].position);
+};
+
+
+/***************************************************/
+
+
+Table::Table (int max_blocks) : total_blocks(max_blocks)
+{
+	Block *b, *p;
+
+	block = new Block[2*total_blocks];
+	position = block + total_blocks;
+	for (b = block, p = position; b < position; ++b, ++p)
+	{
+		b->down = p;
+		b->up = p;
+		b->position = p;
+		p->down = b;
+		p->up = b;
+		p->position = p;
 	}
-	
-	Block * last_block_in_position (int b) {
-		Block *p = position[b];
-		
-		if (p)
-			while (p->next_over)
-				p = p->next_over;
-		
-		return p;
+}
+
+Table::~Table ()
+{
+	delete[] block;
+}
+
+
+/***************************************************/
+
+
+bool Table::is_ilegal (int a, int b)
+{
+	return (a == b) || (block[a].position == block[b].position);
+}
+
+
+void Table::desenlazar (Block *b)
+{
+	b->down->up = b->up;
+	b->up->down = b->down;
+	if (b->is_final())
+		b->down->set_final();
+}
+
+void Table::desenlazar (Block *ini, Block *fin)
+{
+	ini->down->up = fin->up;
+	fin->up->down = ini->down;
+	if (fin->is_final())
+		ini->down->set_final();
+}
+
+
+void Table::enlazar (Block *under, Block *over)
+{
+	over->down = under;
+	over->up = under->up;
+	under->up = over;
+	over->position = under->position;
+	if (over->is_final())
+		over->set_final();
+}
+
+void Table::enlazar (Block *under, Block *over_ini, Block *over_fin)
+{
+	over_ini->down = under;
+	over_fin->up = under->up;
+	under->up = over_ini;
+	while (over_ini != over_fin) {
+		over_ini->position = under->position;
+		over_ini = over_ini->up;
 	}
+	over_fin->position = under->position;
+	if (over_fin->is_final())
+		over_fin->set_final();
+}
 
-	Block * last_block_before (int b) {
-		Block
-			*p = position[block[b].position],
-			*pb = first_block + b;
 
-		if (p == pb)
-			return 0;
+void Table::retornar (Block *b)
+{
+	Block * pos_dest;
 
-		while (p->next_over != pb) {
-			p = p->next_over;
-		}
+	pos_dest = b + total_blocks;
+	pos_dest = last_block (pos_dest);
+	desenlazar (b);
+	enlazar (pos_dest, b);
+}
 
-		return p;
-	}
-	
-	void return_blocks_over (Block *b) {
-		Block
-			*over,
-			*last_in_position;
-		int over_number;
 
-		over = b->next_over;
-		while (over) {
-			over_number = block_number(over);
-			putchar(over_number+'0');
-			last_in_position = last_block_in_position(over_number);
-			
-			if (last_in_position)
-				last_in_position->next_over = over;
-			else
-				position[over_number] = over;
-			over->position = over_number;
-			
-			b->next_over = 0;
-			b = over;
-			over = b->next_over;
-		}
-	}
-	
-	void move_onto (int a, int b) {
-		if (is_ilegal(a,b))
-			return;
+void Table::retornar_encima (Block *b)
+{
+	while (!b->is_final())
+		retornar (b->up);
+}
 
-		Block *p, *pb;
 
-		return_blocks_over(first_block + a);
-		return_blocks_over(first_block + b);
+void Table::put_over (Block *a, Block *b)
+{
+	Block *la, *lb;
 
-		pb = first_block + b;
-		p = last_block_before(a);
-		if (p) {
-			p->next_over->next_over = pb->next_over;
-			pb->next_over = p->next_over;
-			p->next_over = 0;
-		}
-		else {
-			p = first_block + a;
-			p->next_over = pb->next_over;
-			pb->next_over = p;
-			position[a] = 0;
-		}
-		while (pb->next_over) {
-			pb = pb->next_over;
-			pb->position = b;
-		}
-	}
-	
-	void move_over (int a, int b) {
-		if (is_ilegal(a,b))
-			return;
+	la = last_block (a);
+	lb = last_block (b);
+	desenlazar (a, la);
+	enlazar (lb, a, la);
+}
 
-		Block *p, *pb;
 
-		return_blocks_over(first_block + a);
+/***************************************************/
 
-		pb = first_block + b;
-		while (pb->next_over)
-			pb = pb->next_over;
-		p = last_block_before(a);
-		if (p) {
-			p->next_over->next_over = pb->next_over;
-			pb->next_over = p->next_over;
-			p->next_over = 0;
-		}
-		else {
-			p = first_block + a;
-			p->next_over = pb->next_over;
-			pb->next_over = p;
-			position[a] = 0;
-		}
-		while (pb->next_over) {
-			pb = pb->next_over;
-			pb->position = b;
-		}
-	}
-	
-	void pile_onto (int a, int b) {
-		if (is_ilegal(a,b))
-			return;
 
-		Block *p, *pb;
+void Table::move_onto (int a, int b)
+{
+	if (is_ilegal(a,b))
+		return;
 
-		return_blocks_over(first_block + b);
+	Block *pa, *pb;
 
-		pb = first_block + b;
-		p = last_block_before(a);
-		if (p) {
-			p->next_over->next_over = pb->next_over;
-			pb->next_over = p->next_over;
-			p->next_over = 0;
-		}
-		else {
-			p = first_block + a;
-			p->next_over = pb->next_over;
-			pb->next_over = p;
-			position[a] = 0;
-		}
-		while (pb->next_over) {
-			pb = pb->next_over;
-			pb->position = b;
-		}
-	}
-	
-	void pile_over (int a, int b) {
-		if (is_ilegal(a,b))
-			return;
+	pa = block + a;
+	pb = block + b;
+	retornar_encima (pa);
+	retornar_encima (pb);
+	put_over (pa, pb);
+}
 
-		Block *p, *pb;
 
-		pb = first_block + b;
-		while (pb->next_over)
-			pb = pb->next_over;
-		p = last_block_before(a);
-		if (p) {
-			pb->next_over = p->next_over;
-			p->next_over = 0;
-		}
-		else {
-			p = first_block + a;
-			pb->next_over = p;
-			position[a] = 0;
-		}
-		while (pb->next_over) {
-			pb = pb->next_over;
-			pb->position = b;
-		}
-	}
+void Table::move_over (int a, int b)
+{
+	if (is_ilegal(a,b))
+		return;
 
-	void print() {
-		Block *p;
-		for (int i = 0; i < total_blocks; ++i)
-		{
-			printf("\n%d:", i);
-			p = position[i];
-			if (p) {
-				do {
-					printf(" %d", block_number(p));
-					p = p->next_over;
-				}
-				while (p);
-			}
-		}
-	}
+	Block *pa, *pb;
 
-	/*void debug() {
-		Block *p;
-		for (int i = 0; i < total_blocks; ++i)
-		{
-			printf("\n%d:", i);
-			p = position[i];
-			if (p) {
-				do {
-					printf(" %d", block_number(p));
-					//printf("\t%d (%d)", block_number(p), p->position);
-					p = p->next_over;
-				}
-				while (p);
-			}
+	pa = block + a;
+	pb = block + b;
+	retornar_encima (pa);
+	put_over (pa, pb);
+}
+
+
+void Table::pile_onto (int a, int b)
+{
+	if (is_ilegal(a,b))
+		return;
+
+	Block *pa, *pb;
+
+	pa = block + a;
+	pb = block + b;
+	retornar_encima (pb);
+	put_over (pa, pb);
+}
+
+
+void Table::pile_over (int a, int b)
+{
+	if (is_ilegal(a,b))
+		return;
+
+	Block *pa, *pb;
+
+	pa = block + a;
+	pb = block + b;
+	put_over (pa, pb);
+}
+
+
+/***************************************************/
+
+
+void Table::print ()
+{
+	Block *p;
+	for (int i = 0; i < total_blocks; ++i)
+	{
+		printf("%d:", i);
+		p = position[i].up;
+		while (p != p->position) {
+			printf(" %d", block_number(p));
+			p = p->up;
 		}
 		putchar('\n');
-	}*/
-};
+	}
+}
+
+
+/***************************************************/
 
 
 int main ()
