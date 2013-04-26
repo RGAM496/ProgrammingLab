@@ -187,9 +187,7 @@ void second_parse (int index)
 
 int main ()
 {
-	int total_cases, c, trees_parsed;
-	int node[MAX_DEPTH];
-	int numbering[MAX_DEPTH], depth;
+	int total_cases;
 
 	scanf("%d\n", &total_cases);
 
