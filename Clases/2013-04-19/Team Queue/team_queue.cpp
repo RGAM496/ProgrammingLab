@@ -60,7 +60,8 @@ int main ()
 	char command[8];
 	ElemQueue *t;
 
-	while (get_int(total_teams) > 0)
+	get_int(total_teams);
+	while (total_teams)
 	{
 		print_scenario();
 
@@ -103,6 +104,8 @@ int main ()
 
 			get_string(command);
 		}
+
+		get_int(total_teams);
 	}
 
 	return 0;
