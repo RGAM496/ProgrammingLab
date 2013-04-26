@@ -1,6 +1,8 @@
 #include <cstdio>
 
 #define MAX_LENGTH 128
+#define YES "Yes"
+#define NO "No"
 
 
 struct stack
@@ -81,9 +83,9 @@ int main ()
 		}
 
 		if (is_correct)
-			puts(pila.is_empty() ? "yes" : "no");
+			puts(pila.is_empty() ? YES : NO);
 		else {
-			puts("no");
+			puts(NO);
 			if (test_cases > 1) {
 				while (c != '\n')
 					c = getchar();
