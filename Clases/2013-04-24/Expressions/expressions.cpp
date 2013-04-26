@@ -55,30 +55,6 @@ struct Tree
 };
 
 
-/*void debug (Node<int> *n)
-{
-	int vl, vr;
-	vl = n->left ? n->left->value : '0';
-	vr = n->right ? n->right->value : '0';
-	printf(" %c(%c,%c)", n->value, vl, vr);
-}
-void debug (Tree<int> &tree)
-{
-	fputs("Tree: ", stdout);
-	int s = tree.size();
-	for (int i = 0; i < s; ++i)
-		debug(tree.v+i);
-	putchar('\n');
-}
-void debug (Stack<Node<int>*> &stack)
-{
-	fputs("Stack: ", stdout);
-	for (Node<int> **p = stack.v; p <= stack.rear; ++p)
-		debug(*p);
-	putchar('\n');
-}*/
-
-
 /************************************************/
 
 
