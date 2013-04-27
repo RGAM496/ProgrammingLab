@@ -105,6 +105,7 @@ int main ()
 			get_string(command);
 		}
 
+		putchar('\n');
 		get_int(total_teams);
 	}
 
