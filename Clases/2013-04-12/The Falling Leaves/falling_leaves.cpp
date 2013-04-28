@@ -77,7 +77,7 @@ public:
 		for (p = most_left; p != most_right; p = p->right) {
 			printf("%d ", p->value);
 		}
-		printf("%d\n", p->value);
+		printf("%d\n\n", p->value);
 	}
 };
 
@@ -120,7 +120,7 @@ int main ()
 		head = tree.go_head();
 		parse(head);
 
-		printf("\nCase %d:\n", test_case);
+		printf("Case %d:\n", test_case);
 		tree.print();
 
 		get_int(n);
