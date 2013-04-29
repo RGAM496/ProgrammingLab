@@ -1,5 +1,5 @@
 #include <cstdio>
-#include <vector>
+#include <cctype>
 
 using namespace std;
 
@@ -12,19 +12,47 @@ using namespace std;
 #define SIDE 32
 #define MAX_CHILDS 4
 #define MAX_DEPTH 6
+#define MAX_NODES 1365
 
 
 struct Node
 {
 	int value;
-	Node *child[MAX_CHILDS];
+	int child[MAX_CHILDS];
 
 	Node () {
-		child[0] = 0;
-		child[1] = 0;
-		child[2] = 0;
-		child[3] = 0;
+		child[0] = -1;
+		child[1] = -1;
+		child[2] = -1;
+		child[3] = -1;
 	}
+};
+
+
+template <class value_type>
+class vector
+{
+	value_type v[MAX_NODES];
+	value_type *rear;
+
+public:
+
+	inline value_type & operator [] (size_t i) {
+		return v[i];
+	}
+
+	inline void resize (int s) {
+		rear = v + s;
+	}
+
+	inline void push_back (const value_type &value) {
+		*rear = value;
+		++rear;
+	}
+
+	inline int size () {return rear - v;}
+
+	inline value_type & front () {return *v;}
 };
 
 
@@ -40,31 +68,31 @@ public:
 		node[0].value = EMPTY;
 	}
 
-	Node * new_child () {
+	int new_child () {
 		node.push_back(Node());
-		return &(node.back());
+		return node.size() - 1;
 	}
 
-	void new_childs (Node * p) {
-		p->child[0] = new_child();
-		p->child[1] = new_child();
-		p->child[2] = new_child();
-		p->child[3] = new_child();
+	void new_childs (int p) {
+		node[p].child[0] = new_child();
+		node[p].child[1] = new_child();
+		node[p].child[2] = new_child();
+		node[p].child[3] = new_child();
+	}
+
+	int child (int p, size_t ch) {
+		int &child = node[p].child[ch];
+		if (child == -1)
+			new_childs(p);
+		return child;
 	}
 
 	Node * head () {
 		return &(node.front());
 	}
 
-	Node * child (Node *p, size_t ch) {
-		Node *&child = p->child[ch];
-		if (child == 0)
-			new_childs(p);
-		return child;
-	}
-
-	int count (Node *p, int total_pixels) {
-		switch (p->value)
+	int count (int p, int total_pixels) {
+		switch (node[p].value)
 		{
 			case FULL: {
 				return total_pixels;
@@ -74,31 +102,115 @@ public:
 			}
 			case PARENT: {
 				int r = 0, child_pixels = total_pixels / MAX_CHILDS;
-				r += count(p->child[0], child_pixels);
-				r += count(p->child[1], child_pixels);
-				r += count(p->child[2], child_pixels);
-				r += count(p->child[3], child_pixels);
+				r += count(node[p].child[0], child_pixels);
+				r += count(node[p].child[1], child_pixels);
+				r += count(node[p].child[2], child_pixels);
+				r += count(node[p].child[3], child_pixels);
 				return r;
 			}
 		}
 	}
 
 	int count () {
-		return count (head(), SIDE*SIDE);
+		return count (0, SIDE*SIDE);
 	}
 
-	Tree () {
-		node.reserve(1365);
+	Node & operator [] (size_t i) {
+		return node[i];
 	}
 };
 
 
+Tree tree;
+
+
+void ignore_parsing ()
+{
+	static int c;
+	for (int i = 0; i < MAX_CHILDS; ++i) {
+		c = getchar();
+		if (c == PARENT)
+			ignore_parsing();
+	}
+}
+
+
+void first_parse (int index)
+{
+	static int c;
+	Node &node = tree[index];
+
+	c = getchar();
+	node.value = c;
+	switch (c)
+	{
+		case PARENT:
+		{
+			tree.new_childs(index);
+			first_parse(node.child[0]);
+			first_parse(node.child[1]);
+			first_parse(node.child[2]);
+			first_parse(node.child[3]);
+			break;
+		}
+	}
+}
+
+
+void second_parse (int index)
+{
+	static int c;
+	Node &node = tree[index];
+
+	c = getchar();
+	switch (c)
+	{
+		case PARENT:
+		{
+			switch (node.value)
+			{
+				case EMPTY:
+				{
+					node.value = c;
+					tree.new_childs(index);
+					tree[node.child[0]].value = EMPTY;
+					tree[node.child[1]].value = EMPTY;
+					tree[node.child[2]].value = EMPTY;
+					tree[node.child[3]].value = EMPTY;
+				}
+				case PARENT:
+				{
+					second_parse(node.child[0]);
+					second_parse(node.child[1]);
+					second_parse(node.child[2]);
+					second_parse(node.child[3]);
+					break;
+				}
+
+				case FULL:
+				{
+					ignore_parsing();
+					break;
+				}
+			}
+			
+			break;
+		}
+
+		case FULL:
+		{
+			node.value = c;
+		}
+		case EMPTY:
+		{
+		}
+	}
+}
+
+
 int main ()
 {
-	int total_cases, c, trees_parsed;
-	Tree tree;
-	Node *node[MAX_DEPTH];
-	int numbering[MAX_DEPTH], depth;
+	int total_cases;
 
 	scanf("%d\n", &total_cases);
 
@@ -106,104 +218,11 @@ int main ()
 	{
 		tree.reset();
 
-		/* First parse. */
+		first_parse(0);
+		getchar();
 
-		depth = 0;
-		node[depth] = tree.head();
-		numbering[depth] = 0;
-
-		c = getchar();
-		while (c != '\n')
-		{
-			node[depth]->value = c;
-			++numbering[depth];
-
-			switch (c)
-			{
-				case PARENT:
-				{
-					++depth;
-					numbering[depth] = 0;
-					node[depth] = tree.child(node[depth-1], 0);
-					++node[depth-1];
-					break;
-				}
-
-				case FULL:
-				case EMPTY:
-				{
-					++node[depth];
-					if (numbering[depth] >= MAX_CHILDS) {
-						--depth;
-					}
-					break;
-				}
-			}
-
-			c = getchar();
-		}
-
-		/* Second parse. */
-
-		depth = 0;
-		node[depth] = tree.head();
-		numbering[depth] = 0;
-
-		c = getchar();
-		while (c != EOF && c != '\n')
-		{
-			++numbering[depth];
-
-			switch (c)
-			{
-				case PARENT:
-				{
-					switch (node[depth]->value)
-					{
-						case EMPTY:
-						{
-							node[depth]->value = c;
-							tree.new_childs(node[depth]);
-							node[depth]->child[0]->value = EMPTY;
-							node[depth]->child[1]->value = EMPTY;
-							node[depth]->child[2]->value = EMPTY;
-							node[depth]->child[3]->value = EMPTY;
-						}
-						case PARENT:
-						{
-							++depth;
-							numbering[depth] = 0;
-							node[depth] = tree.child(node[depth-1], 0);
-							++node[depth-1];
-							break;
-						}
-
-						case FULL:
-						{
-							node[depth]->value = c;
-							break;
-						}
-					}
-					
-					break;
-				}
-
-				case FULL:
-				{
-					node[depth]->value = c;
-				}
-				case EMPTY:
-				{
-					++node[depth];
-					if (numbering[depth] == MAX_CHILDS) {
-						--depth;
-					}
-					break;
-				}
-			}
-
-			c = getchar();
-		}
+		second_parse(0);
+		getchar();
 
 		printf("There are %d black pixels.\n", tree.count());
 		--total_cases;
