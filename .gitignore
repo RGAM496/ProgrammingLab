@@ -121,6 +121,7 @@ UpgradeLog*.XML
 ################
 
 *.cbp
+*.depend
 
 
 
