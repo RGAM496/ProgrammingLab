@@ -10,11 +10,14 @@
 
 inline int get_int (int &n)
 {
-	return scanf("%d", &n);
+	static int c;
+	return scanf("%d%c", &n, &c) == 2 ? c : EOF;
 }
 
 
 /**********************************************/
+
+int e;
 
 
 int matrioshka (int size)
@@ -24,18 +27,18 @@ int matrioshka (int size)
 
 	sum = 0;
 
-	get_int(r);
+	e = get_int(r);
 	while (r != size)
 	{
-		if (r > 0)
+		if (e == '\n' || e == EOF || r > 0)
 			return 0;
 		else {
 			r = -r;
 			sum += r;
-			if (sum >= size || !matrioshka(r))
+			if (sum >= size || !matrioshka(r) || e == '\n' || e == EOF)
 				return 0;
 		}
-		get_int(r);
+		e = get_int(r);
 	}
 
 	return size;
@@ -49,19 +52,24 @@ int main ()
 {
 	int n;
 
-	while (get_int (n) > 0)
+	e = get_int(n);
+	while (e != EOF)
 	{
-		if (matrioshka(-n))
+		if (e == '\n') {
+			puts(BAD_DESIGN);
+		}
+		else if (matrioshka(-n))
 		{
 			puts(GOOD_DESIGN);
 		}
 		else
 		{
 			puts(BAD_DESIGN);
-			do {
-				n = getchar();
-			} while (n != '\n' && n != EOF);
+			while (e != '\n' && e != EOF)
+				e = getchar();
 		}
+
+		e = get_int(n);
 	}
 
 	return 0;
