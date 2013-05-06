@@ -46,25 +46,71 @@ struct System
 	int tank[MAX_TANKS];
 	int total_tanks, h_average;
 
+	int valves_moved[MAX_TANKS];
+	int tanks_sum[MAX_TANKS];
+
 	int min_valves ();
 };
 
 
 int System::min_valves ()
 {
-	return 0;
+	const int MAX_MOVEMENTS = total_tanks - 1;
+	int not_equilibrated_tanks, average, movements;
+
+	not_equilibrated_tanks = total_tanks;
+	loop (i, total_tanks)
+	{
+		valves_moved[i] = MAX_MOVEMENTS;
+		tanks_sum[i] = tank[i];
+	}
+
+	for (average = h_average, movements = 0;
+		movements < MAX_MOVEMENTS;
+		average += h_average)
+	{
+		loop (t, total_tanks)
+		{
+			if (tanks_sum[t] == average)
+			{
+				for (int i = 0; i <= movements; ++i)
+				{
+					int &vm = valves_moved[t + (i % total_tanks)];
+					not_equilibrated_tanks -= (vm == MAX_MOVEMENTS);
+					if (movements < vm)
+						vm = movements;
+				}
+			}
+		}
+
+		if (not_equilibrated_tanks)
+		{
+			++movements;
+			for (int ts = 0, t = (ts +movements) % total_tanks;
+				ts < total_tanks;
+				++ts, t = (t + 1) % total_tanks)
+			{
+				tanks_sum[ts] += tank[t];
+			}
+		}
+		else
+			break;
+	}
+
+	return movements;
 }
 
 
 /**********************************************/
 
 
+char title[MAX_STRING];
+System sys;
+
+
 int main ()
 {
-	char title[MAX_STRING];
-	System sys;
 	int height;
-
 
 	while (fgets (title, MAX_STRING, stdin), *title != END)
 	{
