@@ -73,9 +73,9 @@ int System::min_valves ()
 		{
 			if (tanks_sum[t] == average)
 			{
-				for (int i = 0; i <= movements; ++i)
+				for (int i = 0, iv = t; i <= movements; ++i, iv = (iv + 1) % total_tanks)
 				{
-					int &vm = valves_moved[t + (i % total_tanks)];
+					int &vm = valves_moved[iv];
 					not_equilibrated_tanks -= (vm == MAX_MOVEMENTS);
 					if (movements < vm)
 						vm = movements;
