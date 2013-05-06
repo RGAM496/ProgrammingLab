@@ -1,7 +1,5 @@
 #include <cstdio>
-#include <deque>
 
-using std::deque;
 
 #define MAX_BEADS 1000
 #define MAX_COLORS 51
