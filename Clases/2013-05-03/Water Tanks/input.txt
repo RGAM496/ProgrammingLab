@@ -6,4 +6,8 @@ Not so trivial case
 4 4 5 4 3
 The Australasian sixteen
 16 2 1 1 2 2 1 1 6 2 1 1 2 2 1 1 6
+First combination
+12 4 4 3 3 2 1 1 2 2 1 1 6
+Second combination
+12 2 1 1 2 2 1 1 6 4 4 3 3
 #

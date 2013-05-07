@@ -1,12 +1,15 @@
 #include <cstdio>
 #include <cctype>
+#include <algorithm>
+
+using std::stable_sort;
 
 #define MAX_TANKS 200
 #define MAX_HEIGHT 99
 #define MAX_STRING 201
 #define END '#'
 
-#define loop(i,limit) for (int i = 0; i < limit; ++i)
+#define loop(i,limit) for (i = 0; i < limit; ++i)
 
 
 inline int get_int (int &n)
@@ -41,12 +44,43 @@ void print_short_title (const char *s)
 /**********************************************/
 
 
+struct Valve
+{
+	int count;
+	int from_tank;
+	int to_tank;
+
+	inline bool operator < (const Valve &v) const {
+		bool ans =
+			(this->count > v.count) ||
+			(this->from_tank < v.from_tank);
+		return ans;
+	}
+
+	inline bool operator == (const Valve &v) const {
+		bool ans = 
+			(this->count == v.count) &&
+			(this->from_tank == v.from_tank);
+		return ans;
+	}
+
+	inline Valve & operator = (const Valve &v) {
+		this->count = v.count;
+		this->from_tank = v.from_tank;
+		this->to_tank = v.to_tank;
+	}
+};
+
+
+/**********************************************/
+
+
 struct System
 {
 	int tank[MAX_TANKS];
 	int total_tanks, h_average;
 
-	int valves_moved[MAX_TANKS];
+	Valve valves_moved[MAX_TANKS];
 	int tanks_sum[MAX_TANKS];
 
 	int min_valves ();
@@ -56,12 +90,12 @@ struct System
 int System::min_valves ()
 {
 	const int MAX_MOVEMENTS = total_tanks - 1;
-	int not_equilibrated_tanks, average, movements;
+	int not_equilibrated_tanks, average, movements, t, i;
 
 	not_equilibrated_tanks = total_tanks;
 	loop (i, total_tanks)
 	{
-		valves_moved[i] = MAX_MOVEMENTS;
+		valves_moved[i].count = MAX_MOVEMENTS;
 		tanks_sum[i] = tank[i];
 	}
 
@@ -71,14 +105,16 @@ int System::min_valves ()
 	{
 		loop (t, total_tanks)
 		{
-			if (tanks_sum[t] == average)
+			if (movements < valves_moved[t].count && tanks_sum[t] == average)
 			{
+				int last_tank = (t + movements) % total_tanks;
 				for (int i = 0, iv = t; i <= movements; ++i, iv = (iv + 1) % total_tanks)
 				{
-					int &vm = valves_moved[iv];
-					not_equilibrated_tanks -= (vm == MAX_MOVEMENTS);
-					if (movements < vm)
-						vm = movements;
+					Valve &vm = valves_moved[iv];
+					not_equilibrated_tanks -= (vm.count == MAX_MOVEMENTS);
+					vm.count = movements;
+					vm.from_tank = t;
+					vm.to_tank = last_tank;
 				}
 			}
 		}
@@ -86,15 +122,30 @@ int System::min_valves ()
 		if (not_equilibrated_tanks)
 		{
 			++movements;
-			for (int ts = 0, t = (ts +movements) % total_tanks;
+			for (int ts = 0, ta = (ts +movements) % total_tanks;
 				ts < total_tanks;
-				++ts, t = (t + 1) % total_tanks)
+				++ts, ta = (ta + 1) % total_tanks)
 			{
-				tanks_sum[ts] += tank[t];
+				tanks_sum[ts] += tank[ta];
 			}
 		}
 		else
 			break;
+	}
+
+	if (movements == MAX_MOVEMENTS)
+		return MAX_MOVEMENTS;
+
+	t = 0;
+	movements = 0;
+	Valve *val;
+	int limit = valves_moved[0].from_tank;
+	if (!limit) limit = total_tanks;
+	while (t < limit)
+	{
+		val = valves_moved + t;
+		movements += val->count;
+		t = val->to_tank + 1;
 	}
 
 	return movements;
@@ -110,7 +161,7 @@ System sys;
 
 int main ()
 {
-	int height;
+	int height, i;
 
 	while (fgets (title, MAX_STRING, stdin), *title != END)
 	{

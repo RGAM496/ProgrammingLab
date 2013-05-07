@@ -1,0 +1,6 @@
+HFDB: 2
+TAE: 5
+NSTC: 2
+TAS: 10
+FC: 10
+SC: 10
