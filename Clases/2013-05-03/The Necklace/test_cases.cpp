@@ -1,6 +1,7 @@
 #include <iostream>
 #include <random>
 #include <cstring>
+#include <ctime>
 
 using namespace std;
 
@@ -13,7 +14,7 @@ using namespace std;
 int main(int argc, char const *argv[])
 {
 	int test_cases, beads, c1, c2;
-	default_random_engine beads_generator, color_generator;
+	default_random_engine generator (time(NULL));
 	uniform_int_distribution <int> beads_dice (MIN_BEADS, MAX_BEADS);
 	uniform_int_distribution <int> color_dice (MIN_COLOR, MAX_COLOR);
 
@@ -25,12 +26,12 @@ int main(int argc, char const *argv[])
 	cout << test_cases << endl;
 	for (int i = 0; i < test_cases; ++i)
 	{
-		beads = beads_dice (beads_generator);
+		beads = beads_dice (generator);
 		cout << beads << endl;
 		for (int j = 0; j < beads; ++j)
 		{
-			c1 = color_dice (color_generator);
-			c2 = color_dice (color_generator);
+			c1 = color_dice (generator);
+			c2 = color_dice (generator);
 			cout << c1 << " " << c2 << endl;
 		}
 	}
