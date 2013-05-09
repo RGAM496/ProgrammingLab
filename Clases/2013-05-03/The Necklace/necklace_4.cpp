@@ -1,10 +1,11 @@
 #include <cstdio>
+//#define DEBUG
 
 
 #define MAX_BEADS 1000
 #define MAX_COLORS 51
 
-#define OUTPUT_LOST "some beads may be lost\n"
+#define OUTPUT_LOST "some beads may be lost"
 
 #define for_color(i) for (int i = 1; i < MAX_COLORS; ++i)
 
@@ -179,6 +180,21 @@ struct Graph
 		sol.pop();
 		connect (b);
 	}
+
+	#ifdef DEBUG
+	inline void debug_solution () {
+		fprintf(stderr, "\nSize: %d\n", solution.size());
+		for (int i = 0; i < solution.size() - 1; ++i) {
+			for (int j = 0; j < solution[i].size(); ++j) {
+				Bead &b = solution[i][j];
+				fprintf(stderr, " (%d,%d)", b.color[0], b.color[1]);
+			}
+			fprintf(stderr, "\n\n");
+		}
+	}
+	#else
+	#define debug_solution() {}
+	#endif
 };
 
 
@@ -208,16 +224,16 @@ bool Graph::solve ()
 	solution.push();
 	solution.last().clear();
 	solve (first_color);
-
-	for (int i = 0; i < solution.size(); ++i)
+	while (total_edges)
 	{
-		for (int j = 0; j < solution[i].size(); ++j)
+		for_color (i)
 		{
-			Bead &b = solution[i][j];
-			printf(" (%d,%d)", b.color[0], b.color[1]);
+			if (color[i].total_edges)
+				solve (i);
 		}
-		putchar('\n');
 	}
+
+	debug_solution ();
 
 	return check_solution ();
 }
@@ -236,10 +252,10 @@ bool Graph::check_solution ()
 
 	while (solution.size() != 2)
 	{
-		sl = &solution.last();
+		sl = solution.p_last() - 1;
 		limit_l = sl->size();
 		not_success = true;
-		for (si = &solution[0]; not_success && si < sl; ++si)
+		for (si = solution.p_at(0); not_success && si < sl; ++si)
 		{
 			limit_i = si->size();
 			for (i = 0, bi = si->p_at(0); not_success && i < limit_i; ++i, ++bi)
@@ -255,6 +271,8 @@ bool Graph::check_solution ()
 				}
 			}
 		}
+
+		debug_solution ();
 
 		if (not_success)
 			return false;
@@ -293,6 +311,9 @@ void Graph::combine_necklaces (Sol *si, Sol *sj, Bead *bi, Bead *bj)
 
 void Graph::solve (int c)
 {
+	#ifdef DEBUG
+	fprintf(stderr, " %d", c);
+	#endif
 	int self_connections;
 	Color *current_color;
 
@@ -350,6 +371,9 @@ int main ()
 		}
 		else
 			puts (OUTPUT_LOST);
+
+		if (test_case < T)
+			putchar('\n');
 	}
 
 	return 0;
