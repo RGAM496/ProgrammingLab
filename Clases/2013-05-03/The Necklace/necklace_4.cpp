@@ -197,7 +197,7 @@ bool Graph::solve ()
 		connections = current_color->total_edges;
 		if (connections)
 		{
-			if (connections % 2 || connections == current_color->edge[i])
+			if (connections % 2 || (connections == current_color->edge[i] && connections != total_edges))
 				return false;
 			if (!first_color)
 				first_color = i;
