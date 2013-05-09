@@ -19,9 +19,8 @@ int main ()
 
 	scanf ("%d\n\n", &datasets);
 
-	while (datasets)
+	while (datasets && scanf ("%d %d", &N, &H) == 2)
 	{
-		scanf ("%d %d\n\n", &N, &H);
 		hamming_strings ();
 		putchar ('\n');
 
@@ -34,9 +33,15 @@ int main ()
 
 void hamming_strings ()
 {
-	number[0] = N;
 	H = N - H;
-	hs (0, N-H+1, H-1);
+	if (H)
+		hs (0, N-H+1, H-1);
+	else
+	{
+		for (int i = 0; i < N; ++i)
+			putchar ('1');
+		putchar ('\n');
+	}
 }
 
 
@@ -49,7 +54,7 @@ void hs (int ini, int fin, int nivel)
 		for (i = ini; i < fin; ++i)
 		{
 			number[nivel] = i;
-			hs (ini + 1, fin + 1, nivel - 1);
+			hs (i + 1, fin + 1, nivel - 1);
 		}
 	}
 	else
