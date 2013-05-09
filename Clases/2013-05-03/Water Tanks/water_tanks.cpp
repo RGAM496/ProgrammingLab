@@ -63,10 +63,9 @@ int System::min_valves ()
 
 	movements = MAX_MOVEMENTS;
 
-	for (i = 0; i < MAX_MOVEMENTS; ++i)
+	for (i = 0, jlimit = MAX_MOVEMENTS; i < MAX_MOVEMENTS; ++i, ++jlimit)
 	{
 		mov = MAX_MOVEMENTS;
-		jlimit = MAX_MOVEMENTS + i;
 		for (j = i; j < jlimit;)
 		{
 			hsum = 0;
