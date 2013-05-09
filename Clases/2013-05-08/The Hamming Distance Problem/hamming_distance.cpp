@@ -21,10 +21,10 @@ int main ()
 
 	while (datasets && scanf ("%d %d", &N, &H) == 2)
 	{
-		hamming_strings ();
-		putchar ('\n');
-
 		--datasets;
+		hamming_strings ();
+		if (datasets)
+			putchar ('\n');
 	}
 
 	return 0;
