@@ -203,9 +203,10 @@ struct Graph
 
 bool Graph::solve ()
 {
-	int connections, first_color;
+	int connections, first_color, total_connections;
 	Color *current_color;
 
+	total_connections = 2 * total_edges;
 	first_color = 0;
 	for_color (i)
 	{
@@ -213,8 +214,18 @@ bool Graph::solve ()
 		connections = current_color->total_edges;
 		if (connections)
 		{
-			if (connections % 2 || (connections == current_color->edge[i] && connections != total_edges))
+			if (connections % 2)
 				return false;
+			if(connections == current_color->edge[i])
+			{
+				if (connections != total_connections || connections % 4)
+					return false;
+				solution.clear();
+				solution.push();
+				solution.last().clear();
+				push_solution (i, i, total_edges);
+				return true;
+			}
 			if (!first_color)
 				first_color = i;
 		}
