@@ -226,7 +226,7 @@ bool Graph::solve ()
 	solve (first_color);
 	while (total_edges)
 	{
-		for_color (i)
+		for (int i = first_color; i < MAX_COLORS; ++i)
 		{
 			if (color[i].total_edges)
 				solve (i);
