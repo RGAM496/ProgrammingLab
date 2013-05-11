@@ -1,115 +1,157 @@
 #include <cstdio>
 #include <cstring>
 
-#define MAX_STRING 11
+
 #define MAX_MN 1500
+#define MAX_TREE_NODES (1000000)
+#define MAX_LOWERCASE ('z' - 'a' + 1)
+#define MAX_LENGTH_STRING 12
+
+#define loop(i,n) for (int i = 0; i < n; ++i)
 
 
-template <class value_type, size_t SIZE>
-struct Stack
-{
-	value_type first[SIZE], *last;
-
-	value_type & operator [] (size_t n) {return first[n];}
-	value_type & front () {return first[0];}
-	value_type & back () {return last[-1];}
-
-	value_type & push () {return *last++;}
-	void push (value_type &v) {*last++ = v;}
-	void pop () {--last;}
-	size_t size () {return last - first;}
-	void clear () {last = first;}
-};
-
-
-struct String
+inline int fgets (char *s)
 {
 	int len;
-	char s[MAX_STRING];
-	Stack <String *, MAX_MN> related;
+	fgets (s, MAX_LENGTH_STRING, stdin);
+	len = strlen(s);
+	if (len)
+		s[len-1] = '\0';
+}
 
-	bool es_comienzo_de (const String *st) {
-		const char *s1, *s2;
-		int i;
-		if (len > st->len)
-			return false;
-		for (i = 0, s1 = s, s2 = st->s; i < len; ++i, ++s1, ++s2)
-			if (*s1 != *s2)
-				return false;
-		return true;
+
+template <class Vtype, size_t CHILDS>
+struct Node
+{
+	Node *child[CHILDS];
+	bool is_leaf;
+
+	inline void clear () {
+		loop (i, CHILDS)
+			child[i] = 0;
 	}
 
-	bool es_final_de (const String *st) {
-		const char *s1, *s2;
-		int i;
-		if (len > st->len)
-			return false;
-		for (i = 0, s1 = s + len - 1, s2 = st->s + st->len - 1; i < len; ++i, --s1, --s2)
-			if (*s1 != *s2)
-				return false;
-		return true;
-	}
-
-	void clear () {related.clear();}
+	Node *& at_child (const char c) {return child[c - 'a'];}
+	inline Node *& operator [] (const char c) {return at_child(c);}
 };
 
 
-struct Language
-: public Stack <String, MAX_MN>
+template <class Vtype, size_t MAX_SIZE>
+struct Stack
 {
-	String & readline () {
-		String &st = push();
-		st.clear();
-		scanf("%s", st.s);
-		st.len = strlen (st.s);
-		return st;
+	Vtype first[MAX_SIZE], *last;
+
+	inline void clear () {last = first;}
+	inline void push (Vtype &v) {*last = v; ++last;}
+	inline void pop () {--last;}
+	inline size_t size () {return last - first;}
+	inline Vtype & at (size_t n) {return first[n];}
+	inline Vtype & operator [] (size_t n) {return at(n);}
+};
+
+
+struct Tree
+{
+	typedef Node <char, MAX_LOWERCASE> Cnode;
+
+	Cnode node[MAX_TREE_NODES], *last;
+	Stack <Cnode *, MAX_MN> prefix;
+
+	inline void clear () {
+		last = node;
+		last->clear();
+		prefix.clear();
 	}
 
-	void readline_comienzo () {
-		int strings_count = size(), i;
-		String &st = readline (), *item;
-		for (i = 0, item = first; i < strings_count; ++i, ++item) {
-			if (st.es_comienzo_de (item))
-				st.related.push (item);
+	Cnode * new_node () {
+		++last;
+		last->clear();
+		last->is_leaf = false;
+		return last;
+	}
+
+	Cnode * child (Cnode *n, const char c) {
+		Cnode *&cn = n->at_child(c);
+		if (cn == 0)
+			cn = new_node();
+		return cn;
+	}
+
+	void add_prefix (const char *c) {
+		Cnode *current_node = node;
+		for (; *c; ++c) {
+			current_node = child(current_node, *c);
+		}
+		prefix.push(current_node);
+	}
+
+	bool concatenate (Cnode *current_node, const char *c) {
+		for (; *c; ++c) {
+			current_node = child(current_node, *c);
+		}
+		if (current_node->is_leaf)
+			return false;
+		else {
+			current_node->is_leaf = true;
+			return true;
 		}
 	}
 
-	void readline_final () {
-		int strings_count = size(), i;
-		String &st = readline (), *item;
-		for (i = 0, item = first; i < strings_count; ++i, ++item) {
-			if (st.es_final_de (item))
-				st.related.push (item);
+	int operator [] (const char *c) {
+		Cnode *current_node;
+		int prefix_size, new_strings;
+		new_strings = 0;
+		prefix_size = prefix.size();
+		loop (i, prefix_size) {
+			current_node = prefix[i];
+			new_strings += concatenate (current_node, c);
 		}
+		return new_strings;
 	}
 
 	void debug () {
-		for (int i = 0; i < size(); ++i) {
-			fprintf(stderr, "%d: %s [%d]\n", i, first[i].s, first[i].related.size());
+		loop (i, prefix.size())
+			fprintf(stderr, " %2d", prefix[i] - node);
+		fprintf(stderr, "\n\n");
+		for (Cnode *n = node; n <= last; ++n) {
+			fprintf(stderr, "%2d: [%c]\n", n - node, n->is_leaf ? 'T' : 'F');
+			loop (i, MAX_LOWERCASE) {
+				if (n->child[i])
+					fprintf(stderr, " %2d", n->child[i] - node);
+				else
+					fprintf(stderr, "  .");
+			}
+			fprintf(stderr, "\n");
 		}
-		fprintf(stderr, "\n");
 	}
-} lang_m, lang_n;
+};
+
+
+Tree tree;
 
 
 int main ()
 {
-	int T, m, n;
+	int t, test_cases, m, n;
+	char s[MAX_LENGTH_STRING];
+	int total_strings;
 
-	scanf ("%d", &T);
-	for (int test_case = 1; test_case <= T; ++test_case)
+	scanf ("%d", &test_cases);
+	for (t = 1; t <= test_cases; ++t)
 	{
+		tree.clear();
+		total_strings = 0;
 		scanf ("%d %d", &m, &n);
-		fprintf(stderr, "%d %d\n", m, n);
-		lang_m.clear();
-		lang_n.clear();
-		for (int i = 0; i < m; ++i)
-			lang_m.readline_comienzo ();
-		for (int i = 0; i < n; ++i)
-			lang_n.readline_final ();
-
-		lang_m.debug();
-		lang_n.debug();
+		getchar();
+		loop (i, m) {
+			fgets(s);
+			tree.add_prefix(s);
+		}
+		loop (i, n) {
+			fgets(s);
+			total_strings += tree[s];
+		}
+		printf("Case %d: %d\n", t, total_strings);
 	}
 
 	return 0;

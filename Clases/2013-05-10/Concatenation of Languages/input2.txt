@@ -1,0 +1,62 @@
+10
+3 2
+cat
+dog
+mouse
+rat
+bat
+1 1
+abc
+cab
+3 3
+
+a
+b
+
+a
+b
+2 2
+a
+aa
+a
+aa
+3 3
+a
+ab
+abc
+bcd
+cd
+d
+5 7
+a
+ab
+abc
+abcd
+abcde
+bcde
+cde
+de
+e
+
+defg
+dzxy
+5 5
+a
+aa
+aab
+abc
+ad
+a
+ab
+b
+bc
+cd
+0 0
+1 1
+a
+b
+4 0
+alpha
+beta
+gamma
+delta
