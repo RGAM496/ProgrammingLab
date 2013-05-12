@@ -28,6 +28,7 @@ struct Node
 	inline void clear () {
 		loop (i, CHILDS)
 			child[i] = 0;
+		is_leaf = false;
 	}
 
 	Node *& at_child (const char c) {return child[c - 'a'];}
@@ -65,7 +66,6 @@ struct Tree
 	Cnode * new_node () {
 		++last;
 		last->clear();
-		last->is_leaf = false;
 		return last;
 	}
 
