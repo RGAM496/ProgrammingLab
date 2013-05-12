@@ -15,8 +15,7 @@ inline int fgets (char *s)
 	int len;
 	fgets (s, MAX_LENGTH_STRING, stdin);
 	len = strlen(s);
-	if (len)
-		s[len-1] = '\0';
+	s[len-1] = '\0';
 }
 
 
@@ -141,8 +140,7 @@ int main ()
 	{
 		tree.clear();
 		total_strings = 0;
-		scanf ("%d %d", &m, &n);
-		getchar();
+		scanf ("%d %d%*c", &m, &n);
 		loop (i, m) {
 			fgets(s);
 			tree.add_prefix(s);
