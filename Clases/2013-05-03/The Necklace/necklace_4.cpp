@@ -218,7 +218,7 @@ bool Graph::solve ()
 				return false;
 			if(connections == current_color->edge[i])
 			{
-				if (connections != total_connections || connections % 4)
+				if (connections != total_connections || connections == 1)
 					return false;
 				solution.clear();
 				solution.push();

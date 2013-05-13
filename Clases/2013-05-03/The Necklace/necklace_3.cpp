@@ -4,7 +4,7 @@
 #define MAX_BEADS 1000
 #define MAX_COLORS 51
 
-#define OUTPUT_LOST "some beads may be lost\n"
+#define OUTPUT_LOST "some beads may be lost"
 
 #define for_color(i) for (int i = 1; i < MAX_COLORS; ++i)
 
@@ -193,7 +193,7 @@ bool Graph::solve ()
 				return false;
 			if (connections == current_color->edge[i])
 			{
-				if (connections != total_connections || connections % 4)
+				if (connections != total_connections || connections == 1)
 					return false;
 				solution.clear();
 				push_solution (i, i, total_edges);
@@ -214,7 +214,7 @@ bool Graph::solve ()
 
 bool Graph::solve (int c)
 {
-	int self_connections;
+	int self_connections, most_connected_color, max_connections;
 	Color *current_color;
 
 	if (total_edges == 0)
@@ -225,20 +225,30 @@ bool Graph::solve (int c)
 	if (self_connections)
 		push_solution (c, c, self_connections);
 
+	most_connected_color = 0;
+	max_connections = 0;
 	for_color (i)
 	{
-		if (current_color->edge[i])
+		int &connections = current_color->edge[i];
+		if (connections > max_connections)
 		{
-			push_solution (c, i);
-			if (solve (i))
-				return true;
-			else
-				pop_solution ();
+			max_connections = connections;
+			most_connected_color = i;
 		}
+	}
+
+	if (most_connected_color)
+	{
+		push_solution (c, most_connected_color);
+		if (solve (most_connected_color))
+			return true;
+		else
+			pop_solution ();
 	}
 
 	if (self_connections)
 		pop_solution ();
+
 	return false;
 }
 
@@ -273,6 +283,9 @@ int main ()
 		}
 		else
 			puts (OUTPUT_LOST);
+
+		if (test_case < T)
+			putchar('\n');
 	}
 
 	return 0;
