@@ -89,7 +89,9 @@ lint possible_cubrencies (size_t n)
 
 	coin.descomponer (n, change);
 	degree = coin.biggest_index (change);
-	ans = count_cubrencies (n, degree);
+	ans = cubrencies[n][degree]
+		? cubrencies[n][degree]
+		: count_cubrencies (n, degree);
 	for (size_t i = 0; i < degree; ++i)
 		cubrencies[n][i] = ans;
 
