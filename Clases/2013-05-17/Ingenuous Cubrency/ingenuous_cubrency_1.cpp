@@ -50,9 +50,10 @@ struct Coin
 
 Coin coin;
 lint cubrencies[MAX_AMMOUNT][BIG_COINS];
+Change change;
 
 
-lint count_cubrencies (size_t n, Change change, size_t ini)
+lint count_cubrencies (size_t n, size_t ini)
 {
 	int &count = change[ini];
 	uint &value = coin[ini];
@@ -68,12 +69,9 @@ lint count_cubrencies (size_t n, Change change, size_t ini)
 	for (; count >= 0; --count, n_aux += value)
 	{
 		coin.descomponer (n_aux, change, ini);
-		ini_aux = ini; //coin.biggest_index (change, ini);
-		partial_ans = cubrencies[n_aux][ini_aux]
-			? cubrencies[n_aux][ini_aux]
-			: count_cubrencies (n_aux, change, ini_aux);
-		for (size_t i = ini; i < ini_aux; ++i)
-			cubrencies[n][i] += partial_ans;
+		partial_ans = cubrencies[n_aux][ini]
+			? cubrencies[n_aux][ini]
+			: count_cubrencies (n_aux, ini);
 		ans += partial_ans;
 	}
 
@@ -83,7 +81,6 @@ lint count_cubrencies (size_t n, Change change, size_t ini)
 
 lint possible_cubrencies (size_t n)
 {
-	Change change;
 	size_t degree;
 	lint ans;
 
@@ -92,7 +89,7 @@ lint possible_cubrencies (size_t n)
 
 	coin.descomponer (n, change);
 	degree = coin.biggest_index (change);
-	ans = count_cubrencies (n, change, degree);
+	ans = count_cubrencies (n, degree);
 	for (size_t i = 0; i < degree; ++i)
 		cubrencies[n][i] = ans;
 
