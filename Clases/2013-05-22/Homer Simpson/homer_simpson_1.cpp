@@ -88,7 +88,7 @@ inline N mod_inverse (N num, N mod)
 int main ()
 {
 	int
-		m, n, t,
+		m, n, t, t_aux,
 		min_r, r, raux, mcd, tm, tn, tnaux;
 	while (scanf("%d %d %d", &m, &n, &t) == 3)
 	{
@@ -102,21 +102,23 @@ int main ()
 		tm = (t - n * tn) / m;
 		if (tm < 0) {
 			r = m;
-			for (tnaux = 0; r && t >= 0; ++tnaux, t -= n) {
-				debug("\ttnaux: %d t: %d\n", tnaux, t)
-				raux = t % m;
+			t_aux = t;
+			for (tnaux = 0; r && t_aux >= 0; ++tnaux, t_aux -= n) {
+				debug("\ttnaux: %d t: %d\n", tnaux, t_aux)
+				raux = t_aux % m;
 				if (r > raux) {
 					r = raux;
 					tn = tnaux;
 				}
 			}
-			debug("\ttn: %d t: %d\n", tn, t)
+			debug("\ttn: %d t_aux: %d\n", tn, t_aux)
+			r *= mcd;
 			r += min_r;
-			tm = (t + n) / m;
+			tm = (t - n * tn) / m;
 		}
 		else
 		{
-			r = min_r + (t - m * tm - n * tn);
+			r = min_r + (t - m * tm - n * tn) * mcd;
 		}
 		debug("\tmin_r: %d r: %d\n", min_r, r)
 		if (r)
