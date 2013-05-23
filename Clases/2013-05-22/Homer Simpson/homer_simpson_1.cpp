@@ -89,7 +89,7 @@ int main ()
 {
 	int
 		m, n, t,
-		min_r, r, mcd, taux, tm, tn;
+		min_r, r, raux, mcd, tm, tn, tnaux;
 	while (scanf("%d %d %d", &m, &n, &t) == 3)
 	{
 		sort(m,n);
@@ -101,11 +101,23 @@ int main ()
 		tn = (t * mod_inverse(n,m)) % m;
 		tm = (t - n * tn) / m;
 		if (tm < 0) {
-			tm = t / m;
-			tn = 0;
+			r = m;
+			for (tnaux = 0; r && t >= 0; ++tnaux, t -= n) {
+				debug("\ttnaux: %d t: %d\n", tnaux, t)
+				raux = t % m;
+				if (r > raux) {
+					r = raux;
+					tn = tnaux;
+				}
+			}
+			debug("\ttn: %d t: %d\n", tn, t)
+			r += min_r;
+			tm = (t + n) / m;
 		}
-		debug("\ttn: %d tm: %d\n", tn, tm)
-		r = min_r + (t - m * tm - n * tn);
+		else
+		{
+			r = min_r + (t - m * tm - n * tn);
+		}
 		debug("\tmin_r: %d r: %d\n", min_r, r)
 		if (r)
 			printf("%d %d\n", tm + tn, r);
