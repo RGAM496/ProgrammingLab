@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <algorithm>
 
 #define MAX_TURTLES 5607
 
@@ -28,6 +29,12 @@ struct Turtle
 		return strength < 0;
 	}
 };
+
+
+bool operator < (const Turtle &t1, const Turtle &t2)
+{
+	return t1.strength < t2.strength || t1.weight > t2.weight;
+}
 
 
 /**************************************************************/
@@ -101,6 +108,8 @@ inline int max_stack (Turtle *last)
 	Turtle &t = t_aux[not_marked];
 	--not_marked;
 	result = 0;
+
+	std::sort(turtle, last_turtle);
 
 	for (last = turtle; last < last_turtle; ++last)
 	{
