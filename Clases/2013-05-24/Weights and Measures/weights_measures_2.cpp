@@ -130,13 +130,14 @@ inline int max_stack ()
 	result = 0;
 	for (vertex = graph_turtles.first; vertex < graph_turtles.last; ++vertex)
 	{
+		turtle_aux[not_marked] = *vertex->value;
 		vertex->value->marked = true;
 		r_aux = max_stack(vertex, not_marked);
-		min(result,r_aux);
 		vertex->value->marked = false;
+		min(result,r_aux);
 	}
 
-	return 0;
+	return ++result;
 }
 
 
