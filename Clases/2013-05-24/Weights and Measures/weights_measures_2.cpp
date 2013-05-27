@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <algorithm>
 
 #define MAX_TURTLES 5607
 
@@ -192,23 +193,29 @@ inline int max_stack ()
 
 int main ()
 {
-	Turtle *t = turtle;
+	Turtle *t;
 	TurtleNode
 		*n_aux[2],
 		*&node = n_aux[0],
-		*&last_node = n_aux[1] = graph_turtles.first;
+		*&last_node = n_aux[1];
 
 	init();
 
 	graph_turtles.clear();
+	t = turtle;
 	while (scanf("%d %d", &t->weight, &t->strength) == 2)
 	{
 		graph_turtles.push();
 		t->strength -= t->weight;
 		t->marked = false;
 		++t;
+	}
+	std::sort (turtle, t);
+
+	for (last_node = graph_turtles.first + 1; last_node < graph_turtles.last; ++last_node)
+	{
 		for (node = graph_turtles.first; node < last_node; ++node)
-		{;
+		{
 			Turtle t_aux[2];
 			int selected;
 			t_aux[0] = *node->value; t_aux[0] += *last_node->value;
@@ -217,8 +224,8 @@ int main ()
 			if (t_aux[selected].is_valid())
 				graph_turtles.connect(n_aux[selected], n_aux[selected^1]);
 		}
-		++last_node;
 	}
+	
 
 	printf("%d\n", max_stack());
 
