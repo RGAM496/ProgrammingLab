@@ -97,6 +97,12 @@ struct Turtle
 };
 
 
+bool operator < (const Turtle &t1, const Turtle &t2)
+{
+	return t1.strength < t2.strength || t1.weight > t2.weight;
+}
+
+
 /*********************************************************************/
 
 typedef Graph <Turtle *, MAX_TURTLES> GraphTurtles;
@@ -116,7 +122,47 @@ inline void init ()
 
 int max_stack (TurtleNode *vertex, size_t not_marked)
 {
-	return 0;
+	Turtle
+		&prev_t = turtle_aux[not_marked],
+		&curr_t = turtle_aux[not_marked-1];
+	TurtleNode **next_vertex;
+	int result, r_aux;
+
+	if (not_marked == 1)
+	{
+		for (next_vertex = vertex->first; next_vertex < vertex->last; ++next_vertex)
+		{
+			Turtle &t = *(*next_vertex)->value;
+			if (t.marked)
+				continue;
+
+			curr_t = prev_t;
+			curr_t += t;
+			return 1 + curr_t.is_valid();
+		}
+	}
+
+	result = 0;
+	--not_marked;
+
+	for (next_vertex = vertex->first; next_vertex < vertex->last; ++next_vertex)
+	{
+		Turtle &t = *(*next_vertex)->value;
+		if (t.marked)
+			continue;
+
+		curr_t = prev_t;
+		curr_t += t;
+		if (curr_t.is_invalid())
+			continue;
+
+		t.marked = true;
+		r_aux = max_stack(*next_vertex, not_marked);
+		t.marked = false;
+		max(result, r_aux);
+	}
+
+	return ++result;
 }
 
 
@@ -124,20 +170,20 @@ inline int max_stack ()
 {
 	TurtleNode *vertex;
 	int result, r_aux;
-	size_t not_marked;
+	size_t not_marked = graph_turtles.size() - 1;
+	Turtle &t_aux = turtle_aux[not_marked];
 
-	not_marked = graph_turtles.size() - 1;
 	result = 0;
 	for (vertex = graph_turtles.first; vertex < graph_turtles.last; ++vertex)
 	{
-		turtle_aux[not_marked] = *vertex->value;
+		t_aux = *vertex->value;
 		vertex->value->marked = true;
 		r_aux = max_stack(vertex, not_marked);
 		vertex->value->marked = false;
-		min(result,r_aux);
+		max(result,r_aux);
 	}
 
-	return ++result;
+	return result;
 }
 
 
@@ -173,6 +219,8 @@ int main ()
 		}
 		++last_node;
 	}
+
+	printf("%d\n", max_stack());
 
 	return 0;
 }
