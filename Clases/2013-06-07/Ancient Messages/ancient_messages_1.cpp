@@ -31,30 +31,30 @@ const int print[] = {
 };
 
 const char hieroglyphs [] = {
-	WAS,	// 4
-	ANKH,	// 0
-	AKHET,	// 5
-	WEDJAT,	// 1
-	SCARAB,	// 3
-	DJED	// 2
+	WAS,	// 'W' 4
+	ANKH,	// 'A' 0
+	AKHET,	// 'K' 5
+	WEDJAT,	// 'J' 1
+	SCARAB,	// 'S' 3
+	DJED	// 'D' 2
 };
 
 const int holes_alpha[] = {
 	1,	// 0 ANKH
-	3,	// 1 WEDJAT
-	5,	// 2 DJED
-	4,	// 3 SCARAB
-	0,	// 4 WAS
-	2,	// 5 AKHET
+	5,	// 1 DJED
+	3,	// 2 WEDJAT
+	2,	// 3 AKHET
+	4,	// 4 SCARAB
+	0,	// 5 WAS
 };
 
 const int holes[] = {
-	4,	// 0 WAS
+	5,	// 0 WAS
 	0,	// 1 ANKH
-	5,	// 2 AKHET
-	1,	// 3 WEDJAT
-	3,	// 4 SCARAB
-	2,	// 5 DJED
+	3,	// 2 AKHET
+	2,	// 3 WEDJAT
+	4,	// 4 SCARAB
+	1,	// 5 DJED
 };
 
 
@@ -278,29 +278,9 @@ int main ()
 		for (size_t i = 0; i < TOTAL_HIEROGLYPHS; ++i)
 			hieroglyphs_count[i] = 0;
 
-		printf("%d %d\n", H, W);
 		tapiz.read (H, W);
-		printf("%d (%d) %d (%d)\n", tapiz.h, tapiz.th, tapiz.w, tapiz.tw);
-
-		// DEBUG
-		for (int i = 0; i < tapiz.th; ++i) {
-			for (int j = 0; j < tapiz.tw; ++j) {
-				printf("%2c", tapiz[i][j] < 3 ? print[tapiz[i][j]] : tapiz[i][j]);
-			}
-			putchar('\n');
-		}
-		putchar('\n');
 
 		rellenar (c_ini, fondo);
-
-		// DEBUG
-		for (int i = 0; i < tapiz.th; ++i) {
-			for (int j = 0; j < tapiz.tw; ++j) {
-				printf("%2c", tapiz[i][j] < 3 ? print[tapiz[i][j]] : tapiz[i][j] + '0');
-			}
-			putchar('\n');
-		}
-		putchar('\n');
 
 		const int COLOR_FIN = jeroglificos.fin;
 		int color_count[COLOR_FIN];
@@ -313,15 +293,11 @@ int main ()
 			{
 				if (tapiz[c_ini] == WHITE)
 				{
-					int r = rellenar (c_ini, huecos);
-					printf("%d %d (%d)\n", c_ini.x, c_ini.y, r);
-					++color_count[r];
+					++color_count[rellenar (c_ini, huecos)];
 				}
 			}
 		}
 
-		for (size_t i = COLOR; i < COLOR_FIN; ++i)
-			printf("%d: %d\n", i, color_count[i]);
 		for (size_t i = COLOR; i < COLOR_FIN; ++i)
 			++hieroglyphs_count[holes[color_count[i]]];
 		printf("Case %d: ", test_case);
