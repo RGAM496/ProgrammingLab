@@ -219,7 +219,7 @@ int rellenar (const Coord &c, RellenoColor &rc)
 FnRellenado (rellenar_fondo)
 {
 	static int d = 0;
-	fprintf(stderr, "fondo[%d]: %d %d (%c)\n", d++, c.x, c.y, tapiz[c] < 3 ? print[tapiz[c]] : tapiz[c] + '0');
+	//fprintf(stderr, "fondo[%d]: %d %d (%c)\n", d++, c.x, c.y, tapiz[c] < 3 ? print[tapiz[c]] : tapiz[c] + '0');
 	switch (tapiz[c])
 	{
 		case WHITE:
@@ -237,7 +237,7 @@ FnRellenado (rellenar_fondo)
 
 FnRellenado (rellenar_jeroglifico)
 {
-	fprintf(stderr, "jeroglifico: %d %d (%c)\n", c.x, c.y, tapiz[c] < 3 ? print[tapiz[c]] : tapiz[c] + '0');
+	//fprintf(stderr, "jeroglifico: %d %d (%c)\n", c.x, c.y, tapiz[c] < 3 ? print[tapiz[c]] : tapiz[c] + '0');
 	switch (tapiz[c])
 	{
 		case BLACK:
@@ -250,7 +250,7 @@ FnRellenado (rellenar_jeroglifico)
 
 FnRellenado (rellenar_hueco)
 {
-	fprintf(stderr, "hueco: %d %d (%c)\n", c.x, c.y, tapiz[c] < 3 ? print[tapiz[c]] : tapiz[c] + '0');
+	//fprintf(stderr, "hueco: %d %d (%c)\n", c.x, c.y, tapiz[c] < 3 ? print[tapiz[c]] : tapiz[c] + '0');
 	int t = tapiz[c];
 	switch (t)
 	{
