@@ -14,6 +14,19 @@ inline int get_uint (uint &n)
 }
 
 
+template <class C, size_t SIZE = MAX_CELLS>
+struct Stack
+{
+	C first[SIZE], *last;
+
+	inline void clear () {last = first;}
+	inline void push (const C &c) {*last = c; ++last;}
+	inline void push () {++last;}
+	inline void pop () {--last;}
+	inline C & operator [] (size_t n) {return first[n];}
+};
+
+
 template <size_t SIZE = MAX_CELLS>
 struct Control
 {
@@ -55,81 +68,84 @@ struct Control
 	}
 };
 
-struct Tree;
-extern Tree cell[MAX_CELLS];
+
+typedef Control <MAX_CELLS> Cell;
+typedef Stack <uint> Result;
 
 
-struct Tree
+Cell cell[MAX_CELLS];
+Result result, r_aux;
+Stack <Cell> c_aux;
+size_t n;
+
+
+inline void solve (size_t start, size_t &size)
 {
-	Control <MAX_CELLS> c;
-	size_t start, size;
-	Tree *t[MAX_CELLS];
-
-	inline void init (size_t sz, size_t st) {
-		start = st;
-		sz = size;
-		for (size_t i = start; i < size; ++i)
-			t[i] = 0;
-	}
-
-	inline void clear () {
-		for (size_t i = start; i < size; ++i) {
-			Tree *&b = t[i];
-			if (b) {
-				delete b;
-				b = 0;
-			}
+	size_t i;
+	Cell &c = c_aux[start];
+	++start;
+	c_aux.push ();
+	Cell &nc = c_aux[start];
+	for (i = start; i < size; ++i)
+	{
+		r_aux.push (i);
+		nc.store_fusion (c, cell[i]);
+		if  (nc.controlled_cells == n)
+		{
+			size = i;
+			result = r_aux;
 		}
-	}
-
-	inline void clear (size_t sz) {
-		clear ();
-		size = sz;
-	}
-
-	inline Tree * branch (size_t n) {
-		Tree *&b = t[n];
-		if (!b) {
-			b = new Tree (size, start + 1);
-			b->c.store_fusion (c, cell[n].c);
+		else
+		{
+			solve (start, size);
 		}
-		return b;
-	}	
-
-	inline uint & operator [] (size_t n) {return c[n];}
-
-	Tree (size_t sz = MAX_CELLS, size_t st = 0) {
-		init (sz, st);
+		r_aux.pop ();
 	}
+	c_aux.pop ();
+}
 
-	~Tree () {
-		clear ();
+
+inline size_t solve ()
+{
+	size_t size, i;
+	r_aux.clear ();
+	c_aux.clear ();
+	size = n;
+	for (i = 0; i < n; ++i)
+	{
+		c_aux.push (cell[i]);
+		r_aux.push (i);
+		solve (0, size);
+		c_aux.pop ();
+		r_aux.pop ();
 	}
-};
-
-
-Tree cell[MAX_CELLS];
-
-
-
+	return size;
+}
 
 
 int main ()
 {
-	size_t n;
-
+	size_t size, test_case;
+	test_case = 0;
 	while (get_uint (n) == 1)
 	{
+		++test_case;
 		for (size_t i = 0; i < n; ++i)
 		{
-			Tree &t = cell[i];
-			t.clear (n);
+			Cell &c = cell[i];
+			c.size = n;
 			for (size_t j = 0; j < n; ++j)
 			{
-				get_uint (t[j]);
+				get_uint (c[j]);
 			}
-			t[i] = 1;
+			c[i] = 1;
 		}
+
+		size = solve ();
+		printf("Case %u: %u ", test_case, size);
+		for (size_t i = 0; i < size; ++i)
+			printf(" %u", result[i]);
+		putchar ('\n');
 	}
 
 	return 0;
