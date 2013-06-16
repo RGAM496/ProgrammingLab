@@ -1,5 +1,4 @@
 #include <cstdio>
-#include <list>
 
 using namespace std;
 
@@ -17,6 +16,13 @@ inline int get_uint (uint &n)
 inline int get_bit (uint &n)
 {
 	return scanf ("%1u", &n);
+}
+
+
+template <typename N>
+inline N min (const N a, const N b)
+{
+	return a < b ? a : b;
 }
 
 
@@ -106,14 +112,15 @@ size_t n;
 inline void solve (size_t start, size_t &size)
 {
 	//fprintf(stderr, "\nsolve (%u, %u)\n", start, size);
-	size_t i;
+	size_t i, st_i;
 	Cell &c = c_aux.back ();
 	c_aux.push ();
 	Cell &nc = c_aux.back ();
-	for (i = start++; i < size; ++i)
+	st_i = start++;
+	for (i = st_i; i < min (n, st_i + size); ++i)
 	{
+		//fprintf(stderr, "\ti: %u < %u (%u) (%u)\n", i, min (n, st_i + size), n, size);
 		r_aux.push (i);
-		//fprintf(stderr, "\ti: %u\n", i);
 		nc.store_fusion (c, cell[i]);
 		if  (nc.controlled_cells == n)
 		{
