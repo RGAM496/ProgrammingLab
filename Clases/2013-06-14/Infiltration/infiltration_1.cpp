@@ -14,6 +14,12 @@ inline int get_uint (uint &n)
 }
 
 
+inline int get_bit (uint &n)
+{
+	return scanf ("%1u", &n);
+}
+
+
 template <class C, size_t SIZE = MAX_CELLS>
 struct Stack
 {
@@ -23,7 +29,18 @@ struct Stack
 	inline void push (const C &c) {*last = c; ++last;}
 	inline void push () {++last;}
 	inline void pop () {--last;}
+	inline size_t size () const {return last - first;}
 	inline C & operator [] (size_t n) {return first[n];}
+	inline C & front () {return *first;}
+	inline C & back () {return last[-1];}
+
+	inline Stack <C, SIZE> & operator = (const Stack <C, SIZE> &st) {
+		clear ();
+		for (const C *p = st.first; p < st.last; ++p) {
+			push (*p);
+		}
+		return *this;
+	}
 };
 
 
@@ -44,9 +61,9 @@ struct Control
 		return *this;
 	}
 
-	inline Control <SIZE> & operator &= (const Control <SIZE> &co) {
+	inline Control <SIZE> & operator |= (const Control <SIZE> &co) {
 		for (size_t i = 0; i < size; ++i)
-			c[i] &= co[i];
+			c[i] |= co[i];
 		return *this;
 	}
 
@@ -63,9 +80,16 @@ struct Control
 
 	inline void store_fusion (const Control <SIZE> &a, const Control <SIZE> &b) {
 		*this = a;
-		*this &= b;
+		*this |= b;
 		store_count ();
 	}
+
+	/*inline void print (FILE *f = stderr) {
+		fprintf(f, "(%u)", size);
+		for (size_t i = 0; i < size; ++i)
+			fprintf (f, "%u", c[i]);
+		fputc ('\n', f);
+	}*/
 };
 
 
@@ -81,18 +105,19 @@ size_t n;
 
 inline void solve (size_t start, size_t &size)
 {
+	//fprintf(stderr, "\nsolve (%u, %u)\n", start, size);
 	size_t i;
-	Cell &c = c_aux[start];
-	++start;
+	Cell &c = c_aux.back ();
 	c_aux.push ();
-	Cell &nc = c_aux[start];
-	for (i = start; i < size; ++i)
+	Cell &nc = c_aux.back ();
+	for (i = start++; i < size; ++i)
 	{
 		r_aux.push (i);
+		//fprintf(stderr, "\ti: %u\n", i);
 		nc.store_fusion (c, cell[i]);
 		if  (nc.controlled_cells == n)
 		{
-			size = i;
+			size = r_aux.size ();
 			result = r_aux;
 		}
 		else
@@ -107,15 +132,26 @@ inline void solve (size_t start, size_t &size)
 
 inline size_t solve ()
 {
+	//fprintf(stderr, "\n\nSOLVE\n\n");
 	size_t size, i;
+
+	for (i = 0; i < n; ++i)
+	{
+		if (cell[i].controlled_cells == n) {
+			result.clear ();
+			result.push (i);
+			return 1;
+		}
+	}
+
 	r_aux.clear ();
 	c_aux.clear ();
 	size = n;
-	for (i = 0; i < n; ++i)
+	for (i = 0; i < n;)
 	{
-		c_aux.push (cell[i]);
 		r_aux.push (i);
-		solve (0, size);
+		c_aux.push (cell[i]);
+		solve (++i, size);
 		c_aux.pop ();
 		r_aux.pop ();
 	}
@@ -130,21 +166,24 @@ int main ()
 	while (get_uint (n) == 1)
 	{
 		++test_case;
+		result.clear ();
 		for (size_t i = 0; i < n; ++i)
 		{
+			result.push (i);
 			Cell &c = cell[i];
 			c.size = n;
 			for (size_t j = 0; j < n; ++j)
 			{
-				get_uint (c[j]);
+				get_bit (c[j]);
 			}
 			c[i] = 1;
+			c.store_count ();
 		}
 
 		size = solve ();
-		printf("Case %u: %u ", test_case, size);
+		printf("Case %u: %u", test_case, size);
 		for (size_t i = 0; i < size; ++i)
-			printf(" %u", result[i]);
+			printf(" %u", result[i] + 1);
 		putchar ('\n');
 	}
 
