@@ -78,7 +78,7 @@ public:
 
 	inline double distance (const Point &P)
 	{
-		return fabs (a * P.x + b * P.y + c) / dd;
+		return (a * P.x + b * P.y + c) / dd;
 	}
 };
 
@@ -96,16 +96,16 @@ struct Polygon
 inline double width (const Polygon &p)
 {
 	int i, j, k;
-	double r, r_aux;
+	double r, r_max, r_min, d;
 	Line line;
 
 	r = 20000.0; // Jamás hallarás este ancho.
 	for (i = 0; i < p.n; ++i)
 	{
 		const Point &pi = p.p[i];
-		r_aux = 0;
 		for (j = i + 1; j < p.n; ++j)
 		{
+			r_max = r_min = 0;
 			const Point &pj = p.p[j];
 			line.set (pi, pj);
 			for (k = 0; k < p.n; ++k)
@@ -114,15 +114,17 @@ inline double width (const Polygon &p)
 					continue;
 
 				const Point &pk = p.p[k];
-				set_max (r_aux, line.distance (pk));
-				#ifdef DEBUG
-				fprintf(stderr, "\t\t\t(%g,%g) (%g, %g)   (%g, %g)\n", pi.x, pi.y, pj.x, pj.y, pk.x, pk.y);
-				fprintf(stderr, "\td: %g   r_aux: %g\n", line.distance(pk), r_aux);
+				d = line.distance (pk);
+				set_max (r_max, d);
+				set_min (r_min, d);
+				#ifdef DEBUG_R_AUX
+				fprintf(stdout, "\t\t\td:\t%g\tr_aux: %g", d, r_aux);
+				fprintf(stdout, "\t\t(%g,%g) (%g, %g) (%g, %g)\n", pi.x, pi.y, pj.x, pj.y, pk.x, pk.y);
 				#endif
 			}
-			set_min (r, r_aux);
+			set_min (r, r_max - r_min);
 			#ifdef DEBUG
-			fprintf(stderr, "r: %g\n", r);
+			fprintf(stdout, "\tr: %g\n", r);
 			#endif
 		}
 	}
