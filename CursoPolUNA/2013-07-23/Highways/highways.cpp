@@ -88,20 +88,27 @@ inline void mark_highway (int i, int j)
 
 inline void choose_highway (int &mi, int &mj)
 {
-	int md = MAX_DISTANCE;
+	int md = MAX_DISTANCE, x, y;
 	for (int i = 0; i < towns; ++i)
 	{
-		if (!city[i].m)
-			continue;
-		for (int j = 0; j < towns; ++j)
+		for (int j = i + 1; j < towns; ++j)
 		{
-			if (city[j].m || hw[i][j].m)
+			if (city[i].m == city[j].m || hw[i][j].m)
 				continue;
-			if (hw[i][j].d < md)
+			x = i;
+			y = j;
+			if (city[y].m)
+				swap (x, y);
+			if (hw[x][y].d < md)
 			{
-				md = hw[i][j].d;
-				mi = i;
-				mj = j;
+				md = hw[x][y].d;
+				mi = x;
+				mj = y;
+				#ifdef DEBUG
+				cerr << "\tmd: " << md;
+				cerr << "\tmi: " << (mi + 1);
+				cerr << "\tmj: " << (mj + 1) << endl;
+				#endif
 			}
 		}
 	}
@@ -136,7 +143,8 @@ int main ()
 
 		do
 		{
-			/*cerr << "\n\nConnected cities: " << connected_cities << endl;
+			#ifdef DEBUG
+			cerr << "\n\nConnected cities: " << connected_cities << endl;
 			for (int i = 0; i < towns; ++i)
 			{
 				cerr << '\t' << city[i].x << ' ' << city[i].y << " (" << city[i].m << ")\t";
@@ -144,12 +152,17 @@ int main ()
 				{
 					cerr << "\t" << hw[i][j].d << " (" << hw[i][j].m << ")";
 				}
-				cerr << '\n';
-			}*/
+				cerr << "\n\n";
+			}
+			#endif
 
 			choose_highway (x, y);
 			mark_highway (x, y);
 			cout << (x + 1) << ' ' << (y + 1) << '\n';
+
+			#ifdef DEBUG
+			cerr << (x + 1) << ' ' << (y + 1) << '\n';
+			#endif
 		}
 		while (connected_cities < towns);
 	}
