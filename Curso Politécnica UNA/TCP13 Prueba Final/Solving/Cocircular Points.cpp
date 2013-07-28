@@ -18,7 +18,7 @@
 #include <iostream>
 #include <cmath>
 #include <map>
-#include <set>
+#include <bitset>
 
 using namespace std;
 
@@ -109,7 +109,7 @@ ostream & operator << (ostream &s, const Circle &C)
 	s << C.r << ' ' << C.c;
 }
 
-typedef set <int> Set;
+typedef bitset <MAX_N> Set;
 typedef map <Circle, Set> Map;
 typedef Map::iterator Iterator;
 
@@ -137,9 +137,9 @@ int main ()
 					if (C.invalid ())
 						continue;
 					//cerr << "\t" << C << "\t\t\t\t\t" << P[i] << "\t" << P[j] << "\t" << P[k] << "\t" << endl;
-					cocircular[C].insert (i);
-					cocircular[C].insert (j);
-					cocircular[C].insert (k);
+					cocircular[C].set (i);
+					cocircular[C].set (j);
+					cocircular[C].set (k);
 				}
 			}
 		}
@@ -149,7 +149,7 @@ int main ()
 		for (Iterator it = cocircular.begin (); it != cocircular.end (); ++it)
 		{
 			//cerr << "\t" << it->second.size() << "\t" << it->first << endl;
-			c = it->second.size ();
+			c = it->second.count ();
 			if (max_cocircular < c)
 				max_cocircular = c;
 		}
