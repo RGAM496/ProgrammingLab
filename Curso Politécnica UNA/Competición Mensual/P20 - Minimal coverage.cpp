@@ -1,10 +1,11 @@
 #include <iostream>
 #include <algorithm>
-#include <set>
 
 using namespace std;
 
-#define MAX_SEGMENTS 50000
+#define MAX_SEGMENTS 100000
+
+typedef int stype;
 
 
 template <typename N>
@@ -17,11 +18,8 @@ inline void set_max (N &a, const N &b)
 
 struct Segment
 {
-	int start, finish;
+	stype start, finish;
 };
-
-typedef set <Segment> Set;
-typedef Set::iterator Iterator;
 
 
 inline bool operator < (const Segment &a, const Segment &b)
@@ -41,8 +39,9 @@ ostream & operator << (ostream &s, Segment &a)
 
 
 Segment segment[MAX_SEGMENTS];
-int minimum, maximum, n;
-Set choosed;
+Segment choosed[MAX_SEGMENTS];
+stype minimum, maximum;
+int n;
 
 
 inline int min_subset ()
@@ -51,28 +50,24 @@ inline int min_subset ()
 	Segment f;
 
 	sort (segment, segment + n);
-	choosed.clear ();
-	minimum = 0;
 	if (segment[0].start > minimum)
 		return 0;
-	minimum = segment[0].finish;
-	choosed.insert (segment[0]);
 
-	count = 1;
-	if (minimum >= maximum)
-		return count;
-	for (i = 1; i < n;)
+	minimum = 0;
+	count = 0;
+	for (i = 0; i < n;)
 	{
 		f.finish = minimum;
 		for (; i < n && segment[i].start <= minimum; ++i)
 		{
-			if (f.finish < segment[i].finish)
+			if (f.finish < segment[i].finish) {
 				f = segment[i];
+			}
 		}
-		if (f.finish == minimum)
+		if (f.finish <= minimum)
 			return 0;
+		choosed[count] = f;
 		++count;
-		choosed.insert (f);
 		if (f.finish >= maximum)
 			return count;
 		minimum = f.finish;
@@ -102,14 +97,9 @@ int main ()
 
 		subset = min_subset ();
 		cout << subset << endl;
-		if (subset)
+		for (int i = 0; i < subset; ++i)
 		{
-			for (Iterator it = choosed.begin(); it != choosed.end(); ++it)
-			{
-				seg = *it;
-				cout << seg << endl;
-				//cout << *it << endl;
-			}
+			cout << choosed[i] << endl;
 		}
 		cout << endl;
 	}
