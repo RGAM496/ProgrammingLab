@@ -74,11 +74,11 @@ int main ()
 {
 	int n;
 
-	while (cin >> n, n)
+	while (cin >> n, cin.ignore(), n)
 	{
 		for (int i = 0; i < n; ++i)
 		{
-			cin >> s[i];
+			cin.getline (s[i], MAX_LENGTH); //cin >> s[i];
 			ps[i].s = s[i];
 		}
 
