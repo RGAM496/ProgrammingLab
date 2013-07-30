@@ -37,6 +37,10 @@ struct DigitCount
 		#endif
 		reset ();
 
+		// Soy un maldito pecador…
+		if (n >= MAX_DIGITS)
+			++dc[0];
+
 		d = n % MAX_DIGITS;
 		n /= MAX_DIGITS;
 		for (i = 0; i < d; ++i)
