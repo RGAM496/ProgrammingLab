@@ -128,6 +128,7 @@ int main ()
 			cin >> P[i];
 
 		cocircular.clear ();
+		max_cocircular = 2;
 		for (int i = 0; i < points; ++i)
 		{
 			for (int j = i + 1; j < points; ++j)
@@ -137,26 +138,18 @@ int main ()
 					C.from_points (P[i], P[j], P[k]);
 					if (C.invalid ())
 						continue;
-					//cerr << "\t" << C << "\t\t\t\t\t" << P[i] << "\t" << P[j] << "\t" << P[k] << "\t" << endl;
 					Set &s = cocircular[C];
 					s.set (i);
 					s.set (j);
 					s.set (k);
+					c = s.count ();
+					if (max_cocircular < c)
+						max_cocircular = c;
 				}
 			}
 		}
-		//cerr << endl;
 
-		max_cocircular = 2;
-		for (it = cocircular.begin (); it != cocircular.end (); ++it)
-		{
-			//cerr << "\t" << it->second.size() << "\t" << it->first << endl;
-			c = it->second.count ();
-			if (max_cocircular < c)
-				max_cocircular = c;
-		}
 		cout << max_cocircular << endl;
-		//cerr << max_cocircular << endl;
 	}
 
 	return 0;
