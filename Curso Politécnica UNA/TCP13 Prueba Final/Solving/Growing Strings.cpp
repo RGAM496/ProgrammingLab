@@ -13,11 +13,17 @@ typedef char String[MAX_LENGTH];
 struct PString
 {
 	const char *s;
+	size_t l;
+
+	inline void operator = (const char *str) {
+		s = str;
+		l = strlen (s);
+	}
 };
 
 inline bool operator < (const PString &s, const PString &t)
 {
-	return strstr (s.s, t.s) != 0;
+	return s.l > t.l && strstr (s.s, t.s) != 0;
 }
 
 
@@ -74,12 +80,12 @@ int main ()
 {
 	int n;
 
-	while (cin >> n, cin.ignore(), n)
+	while (cin >> n, n)
 	{
 		for (int i = 0; i < n; ++i)
 		{
-			cin.getline (s[i], MAX_LENGTH); //cin >> s[i];
-			ps[i].s = s[i];
+			cin >> s[i];
+			ps[i] = s[i];
 		}
 
 		sort (ps, ps + n);
