@@ -23,7 +23,7 @@ struct PString
 
 inline bool operator < (const PString &s, const PString &t)
 {
-	return s.l > t.l && strstr (s.s, t.s) != 0;
+	return s.l < t.l && strstr (t.s, s.s) != 0;
 }
 
 
@@ -34,7 +34,7 @@ inline bool operator < (const PString &s, const PString &t)
 
 
 template <typename N>
-int CeilIndex(N A[], int l, int r, N key) {
+int CeilIndex(N A[], int l, int r, const N &key) {
 	int m;
  
 	while( r - l > 1 ) {
