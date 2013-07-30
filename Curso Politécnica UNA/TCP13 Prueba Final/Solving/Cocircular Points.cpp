@@ -120,6 +120,7 @@ int main ()
 {
 	int points, max_cocircular, c;
 	Circle C;
+	Iterator it;
 
 	while (cin >> points, points)
 	{
@@ -137,16 +138,17 @@ int main ()
 					if (C.invalid ())
 						continue;
 					//cerr << "\t" << C << "\t\t\t\t\t" << P[i] << "\t" << P[j] << "\t" << P[k] << "\t" << endl;
-					cocircular[C].set (i);
-					cocircular[C].set (j);
-					cocircular[C].set (k);
+					Set &s = cocircular[C];
+					s.set (i);
+					s.set (j);
+					s.set (k);
 				}
 			}
 		}
 		//cerr << endl;
 
 		max_cocircular = 2;
-		for (Iterator it = cocircular.begin (); it != cocircular.end (); ++it)
+		for (it = cocircular.begin (); it != cocircular.end (); ++it)
 		{
 			//cerr << "\t" << it->second.size() << "\t" << it->first << endl;
 			c = it->second.count ();
