@@ -17,6 +17,32 @@ const char tell[2][3] = {
 	"Y\n"
 };
 
+template <typename E>
+ostream & operator << (ostream &os, const set <E> &s)
+{
+	typename set <E>::iterator it;
+	os << '{';
+	if (! s.empty ())
+	{
+		it = s.begin ();
+		os << *it;
+		for (++it; it != s.end (); ++it)
+			os << ", " << *it;
+	}
+	os << '}';
+	return os;
+}
+
+template <typename A, typename B>
+ostream & operator << (ostream &os, const map <A, B> &m)
+{
+	typename map <A, B>::iterator it;
+	os << '[';
+	for (it = m.begin (); it != m.end (); ++it)
+		os << '\t' << it->first << ": " << it->second << '\n';
+	os << ']';
+}
+
 
 Map kid_wishes;
 
@@ -41,6 +67,9 @@ inline uint find_cycle (Iterator it)
 	uint k, r, goal, k_old;
 	Iterator it_old;
 
+	#ifdef DEBUG
+	cerr << kid_wishes << endl;
+	#endif
 	r = 1;
 	if (it->second.empty ())
 		return 0;
@@ -52,6 +81,9 @@ inline uint find_cycle (Iterator it)
 	kid_wishes.erase (it_old);
 	while (true)
 	{
+		#ifdef DEBUG
+		//cerr << kid_wishes << endl;
+		#endif
 		++r;
 		if (it->second.empty ())
 			return 0;
