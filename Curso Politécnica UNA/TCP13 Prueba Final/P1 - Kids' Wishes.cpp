@@ -20,7 +20,7 @@ const char tell[2][3] = {
 template <typename E>
 ostream & operator << (ostream &os, const set <E> &s)
 {
-	typename set <E>::iterator it;
+	typename set <E>::const_iterator it;
 	os << '{';
 	if (! s.empty ())
 	{
@@ -36,7 +36,7 @@ ostream & operator << (ostream &os, const set <E> &s)
 template <typename A, typename B>
 ostream & operator << (ostream &os, const map <A, B> &m)
 {
-	typename map <A, B>::iterator it;
+	typename map <A, B>::const_iterator it;
 	os << '[';
 	for (it = m.begin (); it != m.end (); ++it)
 		os << '\t' << it->first << ": " << it->second << '\n';
@@ -68,6 +68,7 @@ inline uint find_cycle (Iterator it)
 	Iterator it_old;
 
 	#ifdef DEBUG
+	cerr << "\n\t--> Find Cycle <--\n\n";
 	cerr << kid_wishes << endl;
 	#endif
 	r = 1;
@@ -76,26 +77,40 @@ inline uint find_cycle (Iterator it)
 	k_old = goal = it->first;
 	k = *(it->second.begin ());
 	it_old = it;
-	it = kid_wishes.find (k);
-	it->second.erase (k_old);
 	kid_wishes.erase (it_old);
-	while (true)
+	it = kid_wishes.find (k);
+	if (it == kid_wishes.end ())
+		return 0;
+	it->second.erase (k_old);
+	while (! kid_wishes.empty ())
 	{
 		#ifdef DEBUG
-		//cerr << kid_wishes << endl;
+		cerr << "\tk: " << k;
+		cerr << "\tk_old: " << k_old;
+		cerr << "\tit->first: " << it->first;
+		cerr << "\tit_old->first: " << it_old->first;
+		cerr << "\tgoal: " << goal;
+		cerr << endl << kid_wishes << endl;
 		#endif
 		++r;
-		if (it->second.empty ())
+		if (it->second.empty ()) {
+			kid_wishes.erase (it);
 			return 0;
+		}
 		k_old = k;
 		k = *(it->second.begin ());
-		if (k == goal)
+		if (k == goal) {
+			//kid_wishes.erase (it);
 			return r;
+		}
 		it_old = it;
-		it = kid_wishes.find (k);
-		it->second.erase (k_old);
 		kid_wishes.erase (it_old);
+		it = kid_wishes.find (k);
+		if (it == kid_wishes.end ())
+			return 0;
+		it->second.erase (k_old);
 	}
+	return 0;
 }
 
 
@@ -106,6 +121,9 @@ int main ()
 
 	while (cin >> kids >> wishes, kids || wishes)
 	{
+		#ifdef DEBUG
+		cerr << "\nBEGIN " << kids << ' ' << wishes << '\n';
+		#endif
 		kid_wishes.clear ();
 		answer = true;
 		for (w = 0; w < wishes; ++w)
@@ -122,11 +140,17 @@ int main ()
 		while (answer && ! kid_wishes.empty ())
 		{
 			a = find_cycle (kid_wishes.begin ());
+			#ifdef DEBUG
+			cerr << "\treturn: " << a << endl;
+			#endif
 			if (a > 0 && a < kids)
 				answer = false;
 		}
 
 		cout << tell[answer];
+		#ifdef DEBUG
+		cerr << "\nEND\n";
+		#endif
 	}
 
 	return 0;
