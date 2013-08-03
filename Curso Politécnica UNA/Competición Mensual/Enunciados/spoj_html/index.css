@@ -1,0 +1,64 @@
+/* ::::: http://www.spoj.com/themes/common.css ::::: */
+
+/* ::::: http://www.spoj.com/gfx/jquery-ui-1.7.1.custom.css ::::: */
+
+table.probleminfo td { padding-right: 10px; }
+#comments_table { text-align: left; }
+/* ::::: http://www.spoj.com/style.css ::::: */
+
+/* ::::: http://www.spoj.com/themes/common.css ::::: */
+
+/* ::::: http://www.spoj.com/gfx/jquery-ui-1.7.1.custom.css ::::: */
+
+table.probleminfo td { padding-right: 10px; }
+#comments_table { text-align: left; }
+body { background: none repeat scroll 0% 0% rgb(238, 238, 238); font-family: Verdana,Arial,Helvetica,sans-serif; font-size: 13px; color: rgb(0, 0, 32); }
+h3 { font-size: 17px; font-weight: bold; }
+td, ul, p, th { font-size: 13px; }
+a { text-decoration: none; color: rgb(0, 0, 160); }
+a:hover, a:active { color: rgb(176, 16, 16); }
+.comm { padding: 5px 5px 20px; }
+.comm_odd { background: none repeat scroll 0% 0% rgb(232, 237, 208); }
+.comm_even { background: none repeat scroll 0% 0% rgb(246, 249, 224); }
+.form { font-size: 12px; }
+.button { font-size: 12px; }
+.maintable { color: rgb(0, 0, 32); border: 0px none rgb(0, 0, 0); }
+.header { border: 0px none; padding: 0px; }
+.headerleft { text-align: left; background-image: url('ulcorner.png'); width: 32px; border: 0px none; }
+.headerright { text-align: right; background-image: url('urcorner.png'); width: 32px; border: 0px none; }
+.headercenter { text-align: center; border: 0px none; padding-top: 8px; padding-bottom: 8px; background: none repeat scroll 0% 0% rgb(0, 0, 128); }
+.header H1 { color: rgb(255, 255, 255); text-align: center; font-size: 26px; font-weight: normal; margin-top: 0px; margin-bottom: 0px; }
+.footer { border-width: 0px 0px 1px; border-style: none none solid; border-color: -moz-use-text-color -moz-use-text-color rgb(96, 96, 160); -moz-border-top-colors: none; -moz-border-right-colors: none; -moz-border-bottom-colors: none; -moz-border-left-colors: none; border-image: none; text-align: center; font-size: 13px; padding: 3px 5px; }
+.cfooter { border: 0px none; text-align: center; font-size: 11px; }
+.footer img { vertical-align: text-bottom; border: 0px none; }
+.menu { border: 0px none; padding-left: 12px; padding-right: 10px; background-color: rgb(232, 237, 208); vertical-align: top; font-size: 12px; font-weight: normal; }
+.menu hr { width: 88px; text-align: left; margin-top: 5px; margin-bottom: 5px; }
+.menucmd { font-size: 13px; font-weight: bold; }
+.time { font-size: 10px; color: rgb(85, 80, 95); }
+.content0 { background-color: rgb(246, 249, 224); border-right: 1px solid rgb(232, 237, 208); }
+.content { border-top: 0px none; background-color: rgb(246, 249, 224); text-align: center; vertical-align: top; height: 350px; font-size: 13px; }
+.navigation { vertical-align: top; background-color: rgb(232, 237, 208); color: rgb(160, 160, 160); font-size: 13px; width: 730px ! important; }
+.navigationcenter { text-align: center; color: rgb(96, 48, 0); font-size: 12px; font-weight: bold; }
+.navigationcenter a { font-weight: normal; }
+.problems { color: rgb(0, 0, 32); text-align: center; vertical-align: top; border: 0px none; }
+.problems td, .problems th { border: 0px none; }
+.prob h1 { font-size: 20px; font-weight: normal; text-align: center; }
+.prob h2 { font-size: 16px; font-weight: normal; text-align: center; }
+.prob h3 { font-size: 15px; }
+.prob p { text-align: justify; }
+.prob pre { font-size: 13px; text-align: left; }
+/* ::::: http://www.spoj.com/themes/tooltips.css ::::: */
+
+.maintable { width: 1055px; }
+/* ::::: http://spoj.com/gfx/SyntaxHighlighter/styles/shCore.css ::::: */
+
+/* ::::: http://spoj.com/gfx/SyntaxHighlighter/styles/shThemeDefault.css ::::: */
+
+.fb_reset { background: none repeat scroll 0% 0% transparent; border: 0px none; border-spacing: 0px; color: rgb(0, 0, 0); cursor: auto; direction: ltr; font-family: "lucida grande",tahoma,verdana,arial,sans-serif; font-size: 11px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: 1; margin: 0px; overflow: visible; padding: 0px; text-align: left; text-decoration: none; text-indent: 0px; text-shadow: none; text-transform: none; visibility: visible; white-space: normal; word-spacing: normal; }
+.fb_reset > div { overflow: hidden; }
+.fb_iframe_widget { display: inline-block; position: relative; }
+.fb_iframe_widget span { display: inline-block; position: relative; text-align: justify; }
+.fb_iframe_widget iframe { position: absolute; }
+.fb_edge_widget_with_comment { position: relative; }
+.ad-r { vertical-align: top; }
+.ad-r > div.fixed { top: 10px; position: fixed; }

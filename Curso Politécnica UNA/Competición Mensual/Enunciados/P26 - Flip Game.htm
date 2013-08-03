@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><HTML>
+<!-- Mirrored from acm.timus.ru/print.aspx?space=1&num=1060 by HTTrack Website Copier/3.x [XR&CO'2010], Sat, 03 Aug 2013 08:22:26 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<HEAD><META http-equiv="Content-Type" content="text/html; charset=utf-8"><META NAME="viewport" CONTENT="width=768"><META HTTP-EQUIV="X-UA-Compatible" CONTENT="IE=edge"><TITLE>1060. Flip Game @ Timus Online Judge</TITLE><LINK REL="alternate" HREFLANG="x-default" HREF="printb056.html?space=1&amp;num=1060"><LINK REL="alternate" HREFLANG="en-us" HREF="print177d.html?space=1&amp;num=1060&amp;locale=en"><LINK REL="alternate" HREFLANG="ru-ru" HREF="printc342.html?space=1&amp;num=1060&amp;locale=ru"><LINK REL="stylesheet" TYPE="text/css" HREF="timus_html/style46.css"><LINK REL="shortcut icon" TYPE="image/x-icon" HREF="favicon.ico"></HEAD><BODY ALINK="#1A5CC8" VLINK="#1A5CC8" LINK="#1A5CC8"><DIV CLASS="prnver"><H2 class="problem_title">1060. Flip Game</H2><DIV class="problem_limits">Time limit: 2.0 second<BR>Memory limit: 64 MB<BR></DIV><DIV ID="problem_text"><DIV CLASS="problem_par"><DIV CLASS="problem_par_normal">Flip game is played on a rectangular 4&times;4 field with
+two-sided pieces placed on each of its 16 squares. One side of each piece is white and the other one is black and each piece is lying either it's black or white side up. Each round
+you flip 3 to 5 pieces, thus changing the color of their
+upper side from black to white and vice versa. The pieces
+to be flipped are chosen every round according to the
+following rules:
+<ol>
+<li>Choose any one of the 16 pieces.</li>
+<li>Flip the chosen piece and also all adjacent pieces
+    to the left, to the right, to the top, and to the bottom
+    of the chosen piece (if there are any).</li>
+</ol></DIV></DIV><IMG SRC="timus_html/image/get.aspx/5bde394b-6b46-4281-bb0e-1fe3433809e2.png" BORDER="0" ALT="Problem illustration" ALIGN="RIGHT" CLASS="problem_raimage"><DIV CLASS="problem_par"><DIV CLASS="problem_par_normal">Consider the following position as an example:
+</DIV></DIV><DIV CLASS="problem_par_pre"><TABLE ALIGN="CENTER" CELLSPACING="0" CELLPADDING="0" BORDER="0"><TR><TD><PRE CLASS="intable">bwbw
+wwww
+bbwb
+bwwb
+</PRE></TD></TR></TABLE></DIV><DIV CLASS="problem_par"><DIV CLASS="problem_par_normal">Here &quot;b&quot; denotes pieces lying their black side up and &quot;w&quot;
+denotes pieces lying their white side up. If we choose to flip
+the 1st piece from the 3rd row (this choice is shown at the picture),
+then the field will become:</DIV></DIV><DIV CLASS="problem_par_pre"><TABLE ALIGN="CENTER" CELLSPACING="0" CELLPADDING="0" BORDER="0"><TR><TD><PRE CLASS="intable">bwbw
+bwww
+wwwb
+wwwb
+</PRE></TD></TR></TABLE></DIV><DIV CLASS="problem_par"><DIV CLASS="problem_par_normal">The goal of the game is to flip either all pieces white side up or
+all pieces black side up. You are to write a program that 
+will search for the minimum number of rounds needed to 
+achieve this goal.</DIV></DIV><H3 CLASS="problem_subtitle">Input</H3><DIV CLASS="problem_par"><DIV CLASS="problem_par_normal">The input consists of 4 lines with 4 characters "w" or "b" each that denote game field position.
+
+</DIV></DIV><H3 CLASS="problem_subtitle">Output</H3><DIV CLASS="problem_par"><DIV CLASS="problem_par_normal">Write to the output a single integer number&nbsp;&mdash; the minimum number of rounds needed to achieve the goal of the game from the given position. If the goal is initially achieved, then write 0. If it's impossible to achieve the goal, then write the word "Impossible" (without quotes).
+
+</DIV></DIV><H3 CLASS="problem_subtitle">Sample</H3><TABLE CLASS="sample"><TR><TH WIDTH="350">input</TH><TH WIDTH="350">output</TH></TR><TR><TD><PRE CLASS="intable">bwbw
+wwww
+bbwb
+bwwb
+</PRE></TD><TD><PRE CLASS="intable">Impossible
+</PRE></TD></TR></TABLE><DIV CLASS="problem_source"><B>Problem Source: </B>2000-2001 ACM Northeastern European Regional Programming Contest
+<BR></DIV></DIV></DIV><script type="text/javascript">(function (d, w, c) { (w[c] = w[c] || []).push(function() { try { w.yaCounter20918869 = new Ya.Metrika({id:20918869, webvisor:true, clickmap:true, trackLinks:true, accurateTrackBounce:true}); } catch(e) { } }); var n = d.getElementsByTagName("script")[0], s = d.createElement("script"), f = function () { n.parentNode.insertBefore(s, n); }; s.type = "text/javascript"; s.async = true; s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js"; if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); } })(document, window, "yandex_metrika_callbacks");</script><noscript><div><img src="http://mc.yandex.ru/watch/20918869" style="position:absolute; left:-9999px;" alt=""></div></noscript></BODY>
+<!-- Mirrored from acm.timus.ru/print.aspx?space=1&num=1060 by HTTrack Website Copier/3.x [XR&CO'2010], Sat, 03 Aug 2013 08:22:29 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+</HTML>
