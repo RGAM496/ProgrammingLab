@@ -18,7 +18,6 @@ inline bool operator < ( const Pair &p, const Pair &q )
 	return p.first < q.first;
 }
 
-
 typedef deque <Pair> Sequence;
 typedef list <int> Subsequence;
 typedef set <Pair> Set;
@@ -70,7 +69,8 @@ Subsequence l;
 inline int lis ()
 {
 	Set s;
-	Iterator it;
+	pair <Iterator, bool> p_it;
+	Iterator &it = p_it.first;
 	int n = seq.size();
 	Pair p;
 	int &i = p.second;
@@ -78,15 +78,20 @@ inline int lis ()
 	for( i = 0; i < n; ++i )
 	{
 		p.first = seq[i].first;
-		it = s.insert( p ).first;
+		p_it = s.insert( p );
 		if( it != s.begin() )
 		{
 			Iterator it_aux = it;
 			--it_aux;
 			seq[i].second = (*it_aux).second;
 		}
-		if( ++it != s.end() )
+		if(p_it.second && ++it != s.end() )
 			s.erase( it );
+		#ifdef DEBUG
+		cerr << p.first << " [" << i << "]:\t"
+			<< s << "\n\n\t"
+			<< seq << "\n\n";
+		#endif
 	}
 
 	p = *( s.rbegin() );
@@ -94,6 +99,9 @@ inline int lis ()
 	{
 		p = seq[i];
 		l.push_front (p.first);
+		#ifdef DEBUG
+		cerr << p << endl;
+		#endif
 	}
 	while (i != NP);
 
@@ -110,6 +118,7 @@ int main ()
 	while( !cin.eof() )
 	{
 		cin >> p.first;
+		cin.ignore();
 		seq.push_back( p );
 	}
 
