@@ -1,5 +1,4 @@
 #include <iostream>
-#include <stack>
 #include <cctype>
 
 using namespace std;
@@ -9,8 +8,6 @@ using namespace std;
 #define LAST 'Z'
 #define LETTERS (LAST - FIRST + 1)
 
-typedef stack <int> Stack;
-
 
 struct Sub
 {
@@ -18,21 +15,16 @@ struct Sub
 };
 
 
-ostream & operator << (ostream &os, const Sub &sub)
-{
-	return os << sub.count << ' ' << sub.previous;
-}
-
-
-int distinct_subsequences( Stack &st )
+inline int distinct_subsequences()
 {
 	Sub sub[LETTERS] = {{1, 0}}, old;
 	int c_old, c;
+	char ch;
 	c = 0;
-	while( !st.empty() )
+	while( ( cin.get( ch ), isupper( ch ) ) && !cin.eof() )
 	{
 		c_old = c;
-		c = st.top(); st.pop();
+		c = ch - FIRST;
 		old = sub[c_old];
 		//sub[c].count = 2 * old.count;
 		sub[c].count = ( 2 * old.count ) % MOD;
@@ -47,9 +39,6 @@ int distinct_subsequences( Stack &st )
 	return sub[c].count;
 }
 
-
-Stack st;
-
 int main ()
 {
 	int test_cases;
@@ -59,11 +48,7 @@ int main ()
 	cin.ignore();
 	while (test_cases--)
 	{
-		while( ( cin.get( c ), isupper( c ) ) && !cin.eof() )
-		{
-			st.push( c - FIRST );
-		}
-		cout << distinct_subsequences( st ) << endl;
+		cout << distinct_subsequences() << endl;
 	}
 
 	return 0;
