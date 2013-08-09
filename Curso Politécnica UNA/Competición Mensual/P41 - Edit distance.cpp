@@ -1,6 +1,7 @@
 #include <iostream>
-#include <cctype>
 #include <algorithm>
+#include <cctype>
+#include <cstring>
 using namespace std;
 
 #define MAX_LENGTH 2001
@@ -17,11 +18,8 @@ struct String
 
 istream & operator >> (istream &is, String &s)
 {
-	char *l = s.str;
-	while( *l = is.get(), isupper( *l ) )
-		++l;
-	*l = '\0';
-	s.len = l - s.str;
+	is >> s.str;
+	s.len = strlen( s.str );
 	return is;
 }
 
@@ -88,7 +86,6 @@ int main ()
 {
 	uint t;
 	cin >> t;
-	cin.ignore();
 	while (t--)
 	{
 		cin >> s;
