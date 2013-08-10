@@ -62,7 +62,7 @@ struct Region
 		r = *this;
 		for( i = length - 1; i; --i )
 		{
-			if( r[i] < 1 )
+			if( r[i] < 2 )
 			{
 				r[i] += 2;
 				break;
@@ -74,7 +74,7 @@ struct Region
 		}
 		if( i == 0 )
 		{
-			if( r[i] < 1 )
+			if( r[i] < 2 )
 			{
 				r[i] += 2;
 			}
