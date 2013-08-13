@@ -74,11 +74,9 @@ struct Node
 		int r = 0, c = 0;
 		for (; *s; ++s)
 		{
-			//cerr << *s;
 			n = n->next_node (*s);
 			if (n == 0)
 			{
-				//cerr << "\t\t0\n";
 				break;
 			}
 			++c;
@@ -89,32 +87,37 @@ struct Node
 				break;
 			}
 		}
-		//cerr << "\t\t" << r;
-		/*if (r)
+		if (r)
 		{
-			//cerr << "\t\tFOUND!\n";
 			return r;
-		}*/
-		//cerr << endl;
+		}
 		return r;
 	}
 
 	int count_emoticons (char *s)
 	{
-		int i = 0, r = 0;
+		int i, r = 0, m, f;
 		while (*s)
 		{
-			i = find_emoticon (s);
-			if (i)
+			m = find_emoticon (s);
+			if (m)
 			{
+				for (i = 1; i < m; ++i)
+				{
+					f = find_emoticon (s + i);
+					if (f)
+					{
+						m = min (m, i + f);
+						if (f == 1)
+							break;
+					}
+				}
 				++r;
-				s += i;
-				//cerr << "\t\t\t\tCOUNT: " << r << "\n";
+				s += m;
 			}
 			else
 				++s;
 		}
-		//cerr << "\n\tFINAL COUNT: " << r << "\n\n";
 		return r;
 	}
 };
@@ -128,7 +131,6 @@ int main ()
 
 	while (cin >> n >> m, n || m)
 	{
-		//cerr << "\nTEST CASE " << n << " " << m << "\n\n";
 		Node emoticon;
 		cin.ignore (lim, '\n');
 		while (n--)
