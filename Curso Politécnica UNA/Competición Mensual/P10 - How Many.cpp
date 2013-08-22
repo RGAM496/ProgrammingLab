@@ -154,9 +154,8 @@ int main ()
 {
 	int n, r, k;
 
-	while( !cin.eof() )
+	while( cin >> n >> r >> k, !cin.fail() )
 	{
-		cin >> n >> r >> k;
 		#ifdef DEBUG
 		cerr << "\nTEST CASE"
 			<< "\t" << n
