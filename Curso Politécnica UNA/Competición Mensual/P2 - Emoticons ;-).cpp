@@ -1,7 +1,6 @@
 #include <iostream>
 #include <map>
 #include <string>
-#include <limits>
 
 using namespace std;
 
@@ -126,19 +125,18 @@ struct Node
 int main ()
 {
 	int n, m, count;
-	const int lim = numeric_limits <streamsize> :: max();
 	string line;
 
 	while (cin >> n >> m, n || m)
 	{
 		Node emoticon;
-		cin.ignore (lim, '\n');
 		while (n--)
 		{
-			getline(cin,line,'\n');
+			cin >> line;
 			emoticon.insert (line.c_str());
 		}
 		count = 0;
+		while (cin.get() != '\n');
 		while (m--)
 		{
 			getline(cin,line,'\n');
