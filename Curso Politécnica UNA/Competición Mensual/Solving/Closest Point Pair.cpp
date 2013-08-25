@@ -5,12 +5,15 @@
 using namespace std;
 
 #define MAX_N 50000
-#define MAX_D 20000000.0
+#define MAX_D 10000000000000
+
+typedef long long int dist;
+typedef int coord;
 
 
 struct Punto
 {
-	double x, y;
+	coord x, y;
 	size_t ref;
 };
 
@@ -27,9 +30,15 @@ bool min_y (const Punto &A, const Punto &B)
 }
 
 
-double distancia (const Punto &A, const Punto &B)
+bool operator < (const Punto &A, const Punto &B)
 {
-	double x, y;
+	return min_x( A, B );
+}
+
+
+dist distancia (const Punto &A, const Punto &B)
+{
+	dist x, y;
 	x = A.x - B.x; x *= x;
 	y = A.y - B.y; y *= y;
 	return x + y;
@@ -50,7 +59,7 @@ ostream & operator << (ostream &os, const Punto &p)
 
 struct Par
 {
-	double d;
+	dist d;
 	size_t a, b;
 };
 
@@ -63,7 +72,7 @@ bool operator < (const Par &p1, const Par &p2)
 
 ostream & operator << (ostream &os, const Par &p)
 {
-	return os << p.a << ' ' << p.b << ' ' << sqrt( p.d );
+	return os << p.a << ' ' << p.b << ' ' << sqrt( (double) p.d );
 }
 
 
@@ -81,7 +90,7 @@ inline void menor_distancia_bruta (const size_t N, const Punto P[], Par &r)
 
 		case 3:
 		{
-			double d;
+			dist d;
 			menor_distancia_bruta (2, P, r );
 			d = distancia( P[0], P[2] );
 			if( d < r.d )
@@ -105,8 +114,8 @@ inline void menor_distancia_bruta (const size_t N, const Punto P[], Par &r)
 				* const pN = P + N,
 				* const pn = pN - 1;
 			const Punto *pi, *pj;
-			double d;
-			r.d = MAX_D;
+			dist d;
+			menor_distancia_bruta( 2, P, r );
 			for( pi = P; pi < pn; ++pi )
 			{
 				for( pj = pi + 1; pj < pN; ++pj )
@@ -137,19 +146,20 @@ void menor_distancia (const size_t N, const Punto X[], const Punto Y[], Par &r)
 			Nizq = (N + 1) / 2,
 			Nder = N - Nizq;
 		size_t iz, de, vN, vn, lim;
-		double mediana, d;
-		Punto X_izq[Nizq], Y_izq[Nizq], X_der[Nder], Y_der[Nder], V[N];
+		dist d;
+		Punto X_izq[Nizq], Y_izq[Nizq], X_der[Nder], Y_der[Nder], V[N],
+			mediana;
 		Par r_izq, r_der;
 
 		for( size_t i = 0; i < Nizq; ++i )
 			X_izq[i] = X[i];
-		mediana = X[Nizq - 1].x;
+		mediana = X[Nizq - 1];
 		for( size_t i = 0; i < Nder; ++i )
 			X_der[i] = X[Nizq + i];
 		iz = de = 0;
 		for( size_t i = 0; i < N; ++i )
 		{
-			if( Y[i].x > mediana )
+			if( mediana < Y[i] )
 				Y_der[de++] = Y[i];
 			else
 				Y_izq[iz++] = Y[i];
@@ -162,23 +172,26 @@ void menor_distancia (const size_t N, const Punto X[], const Punto Y[], Par &r)
 		vN = 0;
 		for( size_t i = 0; i < N; ++i )
 		{
-			if( abs( Y[i].x - mediana ) < r.d )
+			if( abs( Y[i].x - mediana.x ) < r.d )
 			{
 				V[vN++] = Y[i];
 			}
 		}
-		vn = vN - ( vN > 0 );
-		for( size_t i = 0; i < vn; ++i )
+		if( vN > 1 )
 		{
-			lim = min( i + 8, vN );
-			for( size_t j = i + 1; j < lim; ++j )
+			vn = vN - 1;
+			for( size_t i = 0; i < vn; ++i )
 			{
-				d = distancia( V[i], V[j] );
-				if( d < r.d )
+				lim = min( i + 8, vN );
+				for( size_t j = i + 1; j < lim; ++j )
 				{
-					r.d = d;
-					r.a = V[i].ref;
-					r.b = V[j].ref;
+					d = distancia( V[i], V[j] );
+					if( d < r.d )
+					{
+						r.d = d;
+						r.a = V[i].ref;
+						r.b = V[j].ref;
+					}
 				}
 			}
 		}
@@ -204,7 +217,7 @@ int main ()
 	sort( X, X + N, min_x);
 	sort( Y, Y + N, min_y);
 	menor_distancia( N, X, Y, p );
-	cout << fixed << setprecision( 6 ) << p << endl;
+	cout << fixed << setprecision( 6 ) << p;
 
 	return 0;
 }
