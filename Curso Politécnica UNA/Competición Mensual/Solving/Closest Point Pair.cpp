@@ -32,7 +32,7 @@ double distancia (const Punto &A, const Punto &B)
 	double x, y;
 	x = A.x - B.x; x *= x;
 	y = A.y - B.y; y *= y;
-	return sqrt( x + y );
+	return x + y;
 }
 
 
@@ -63,7 +63,7 @@ bool operator < (const Par &p1, const Par &p2)
 
 ostream & operator << (ostream &os, const Par &p)
 {
-	return os << p.a << ' ' << p.b << ' ' << fixed << setprecision( 6 ) << p.d;
+	return os << p.a << ' ' << p.b << ' ' << sqrt( p.d );
 }
 
 
@@ -204,7 +204,7 @@ int main ()
 	sort( X, X + N, min_x);
 	sort( Y, Y + N, min_y);
 	menor_distancia( N, X, Y, p );
-	cout << p << endl;
+	cout << fixed << setprecision( 6 ) << p << endl;
 
 	return 0;
 }
