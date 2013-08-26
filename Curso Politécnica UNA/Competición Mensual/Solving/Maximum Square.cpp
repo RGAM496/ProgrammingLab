@@ -1,92 +1,79 @@
 #include <iostream>
-#include <cmath>
 using namespace std;
 
 #define MAX_R 1000
 #define MAX_C 1000
+#define DIRTY -1
 
+int ms, msc[MAX_R][MAX_C], m[MAX_R][MAX_C];
 
-template <typename N>
-inline void set_min( N &a, const N &b )
+inline void reset( int R, int C )
 {
-	if( a > b )
-		a = b;
-}
-
-template <typename N>
-inline void set_max( N &a, const N &b )
-{
-	if( a < b )
-		a = b;
-}
-
-
-struct Point
-{
-	int r, c;
-};
-
-
-int R, C, P, m[ MAX_R ][ MAX_C ];
-Point point[ MAX_R * MAX_C ];
-
-
-inline void reset()
-{
-	P = 0;
-}
-
-
-inline int max_square( const Point &p )
-{
-	int r, c, rows, cols;
-	Point q = {R - 1, C - 1};
-	rows = 1;
-	cols = C - p.c;
-	for( r = p.r; r <= q.r; ++r )
+	ms = 0;
+	for (int i = 0; i < R; ++i)
 	{
-		for( c = p.c; m[r][c] && c <= q.c; ++c );
-		set_min( q.c, --c );
-		cols = q.c - p.c + 1;
-		if (rows == cols)
-			return rows;
-		else if (rows > cols)
-			return rows - 1;
-		++rows;
+		for (int j = 0; j < C; ++j)
+		{
+			msc[i][j] = DIRTY;
+		}
 	}
-	return rows - 1;
+}
+
+int maximum_square_corner( int r, int c )
+{
+	int &result = msc[r][c], r_aux;
+
+	if( result == DIRTY )
+	{
+		r_aux = r * c;
+		if( r > 0 )
+		{
+			r_aux = min( r_aux, maximum_square_corner( r - 1, c ) );
+			if( c > 0 )
+			{
+				r_aux = min( r_aux, maximum_square_corner( r - 1, c - 1 ) );
+			}
+		}
+		if( c > 0 )
+		{
+			r_aux = min( r_aux, maximum_square_corner( r, c - 1 ) );
+		}
+		if( r == 0 && c == 0 )
+		{
+			r_aux = 0;
+		}
+		++r_aux;
+		result = m[r][c] ? r_aux : 0;
+		ms = max( ms, result );
+
+	}
+
+	return result;
+}
+
+
+inline int maximum_square( int R, int C )
+{
+	maximum_square_corner( R - 1, C - 1 );
+	return ms;
 }
 
 
 int main ()
 {
-	Point p;
-	int &r = p.r, &c = p.c,
-		maximum, max_possible;
+	int R, C, r, c;
 
 	while( cin >> R >> C, R || C )
 	{
-		maximum = 0;
-		reset();
+		reset( R, C );
 		for( r = 0; r < R; ++r )
 		{
 			for( c = 0; c < C; ++c )
 			{
 				cin >> m[r][c];
-				if( m[r][c] )
-				{
-					point[P++] = p;
-				}
 			}
 		}
-		max_possible = min( min( R, C ), (int)sqrt( (double)P ) );
-		for( r = 0; r < P; ++r )
-		{
-			set_max( maximum, max_square( point[r] ) );
-			if( maximum == max_possible )
-				break;
-		}
-		cout << maximum << endl;
+		cout << maximum_square( R, C ) << endl;
 	}
 
 	return 0;
