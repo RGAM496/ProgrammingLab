@@ -8,7 +8,7 @@ using namespace std;
 #define MAX_D 10000000000000
 
 typedef long long int dist;
-typedef int coord;
+typedef dist coord;
 
 
 struct Punto
@@ -72,7 +72,11 @@ bool operator < (const Par &p1, const Par &p2)
 
 ostream & operator << (ostream &os, const Par &p)
 {
-	return os << p.a << ' ' << p.b << ' ' << sqrt( (double) p.d );
+	if( p.a > p.b )
+		os << p.b << ' ' << p.a;
+	else
+		os << p.a << ' ' << p.b;
+	return os << ' ' << sqrt( (double) p.d );
 }
 
 
@@ -217,7 +221,7 @@ int main ()
 	sort( X, X + N, min_x);
 	sort( Y, Y + N, min_y);
 	menor_distancia( N, X, Y, p );
-	cout << fixed << setprecision( 6 ) << p;
+	cout << fixed << setprecision( 6 ) << p << endl;
 
 	return 0;
 }
