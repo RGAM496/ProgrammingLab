@@ -429,14 +429,42 @@
 
 \section{Basic wall maze}
 
+	Este problema resolví haciendo un recorrido BFS mediante una estructura
+	\verb|queue <Path>|, donde \verb|Path| almacena la casilla donde se encuentra
+	y toda la ruta recorrida hasta el momento (en una cadena).
+
+	Dado que había como mucho $6^2 = 36$ casillas por las cuales pasar, no cabía
+	duda de que el algoritmo iba a terminar muy rápidamente.
+
+	La parte más ``difícil'' fue crear una estructura para el tablero que
+	permitiera insertar las murallas cómodamente.
+	En mi caso, elegí hacer una matriz grande, donde dos casillas adyacentes
+	tienen, en la matriz implementada, una casilla entre ellas, que representa
+	la existencia de la muralla.
+	Luego de hacer la conversió de coordenadas correspondiente, el problema estuvo
+	resuelto.
 
 
 \section{Rope}
 
+	El problema consistió en sumar las distancias de los segmentos y los arcos
+	que se formaban en la figura.
+
+	Cada segmento es tangente a dos circunferencias, y fácilmente se demuestra
+	que	mide lo mismo que la distancia entre los centros de dichas circunferencias.
+
+	Para sumar los arcos, primero intenté calcular los ángulos que se formaban en
+	cada arco, pero me salía tan desprolijo que decidí consultar los tips.
+	¿Cómo no se me había ocurrido que todos los arcos suman un giro?
+	Podía haberlo deducido si observaba que cada uno tenía la amplitud de un
+	ángulo externo del polígono delimitado por los centros.
 
 
 \section{Binary Lexicographic Sequence}
 
+	En este problema disfruté crear un artificio matemático que me permitió
+	dar con cada dígito en el orden que necesitaba imprimir.
+	Sí, complejidad $O(n)$, donde $n$ es el número de dígitos a mostrar.
 
 
 \section{Distinct Subsequences}
