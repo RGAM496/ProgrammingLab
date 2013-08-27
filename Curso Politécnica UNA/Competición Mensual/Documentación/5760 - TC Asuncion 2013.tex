@@ -1,0 +1,40 @@
+\documentclass{report}
+
+\usepackage[Spanish]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{numprint}
+
+
+\title{TC Asuncion 2013}
+\author{}
+% Remove command to get current date 
+\date{}
+
+
+\lstset{
+	numbers=left,
+	%numberstyle=\small,
+	%basicstyle=\small,
+	breaklines=true,
+	tabsize=4,
+	language=C++
+}
+
+
+\begin{document}
+
+\pagenumbering{alph}
+
+\maketitle
+
+\pagenumbering{arabic}
+
+\input{Document.tex}
+
+\input{Appendix.tex}
+
+
+\end{document}
