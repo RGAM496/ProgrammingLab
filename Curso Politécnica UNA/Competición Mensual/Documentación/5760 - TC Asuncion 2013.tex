@@ -3,15 +3,23 @@
 \usepackage[Spanish]{babel}
 \usepackage[latin1]{inputenc}
 \usepackage{amsmath,amsfonts,amssymb}
-\usepackage{hyperref}
 \usepackage{listings}
 \usepackage{numprint}
+\usepackage{datetime}
 
+\usepackage[
+	colorlinks,
+	pdftex,
+	pdfauthor={Rafael Arias Michel},
+	pdftitle={Soluciones de ``TC Asuncion 2013''}]
+	{hyperref}
 
-\title{TC Asuncion 2013}
-\author{}
+\newdate{hoy}{27}{8}{2013}
+
+\title{Soluciones de ``TC Asuncion 2013''}
+\author{Rafael Arias Michel}
 % Remove command to get current date 
-\date{}
+\date{\displaydate{hoy}}
 
 
 \lstset{
@@ -30,10 +38,13 @@
 
 \maketitle
 
+\tableofcontents
+
 \clearpage
 \pagenumbering{roman}
 
-\tableofcontents
+\clearpage
+\input{Abstract.tex}
 
 \clearpage
 \pagenumbering{arabic}
