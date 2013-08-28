@@ -1,0 +1,70 @@
+\chapter{Algoritmos finalizados pero no aceptados}
+
+
+\section{Maximum Square}
+
+	Este problema no pudo ser enviado porque el juez indicó constantemente
+	\textbf{Submission Error} (es horrible cuando pasa eso).
+
+	Mi primer algoritmo era una versión bastante costosa, sin programación
+	dinámica, que se basaba en hacer una lista de todas las casillas con valor 1
+	y, para cada casilla, comprobar el mayor cuadrado que se podía formar
+	asumiendo que dicha casilla era la esquina superior izquierda.
+	Previamente calculaba el mayor número posible del lado (el mínimo entre la
+	raíz cuadrada de la cantidad de unos, la cantidad de filas y la cantidad de
+	columnas de la matriz) para poder detener la búsqueda en caso de hallarla.
+
+	Busqué los test cases oficiales y descubrí que era poco eficiente el algoritmo
+	(le tomó más de 18 minutos terminar el recorrido), y en ese momento me animé
+	a mirar los consejos en el PDF de la clase.
+	Implementé el algoritmo recomendado y, al probarlo comprobé que efectivamente
+	era mucho más veloz, pero algunas impresiciones me llevaban a no hallar el
+	mayor de los cuadrados (más tarde comprobé que era porque necesitaba hacer
+	la recursión aún si mi casilla era un 0).
+	Corregido el error, el algoritmo funcionó tal como esperaba.
+
+	Lastimosamente, me quedé con las ganas de saber si realmente era correcta mi
+	solución.
+
+
+\section{Turkish Roulette}
+
+	Este problema me dejó pensando bastante tiempo.
+	Lo primero que pensé fue en optimizar el uso de las casillas precalculando
+	las sumas.
+
+	Luego me puse a pensar de qué modo podía optimizar el cálculo del mejor caso.
+	Después de bastantes planteamientos, no hallé uno que me convencía, y recurrí
+	a la recomendación en el PDF.
+
+	Particularmente no veía cómo podía haber mucha optimización con esa técnica,
+	ya que depende de tres variales: el número de bolas que ubicar, la posición
+	disponible y las posiciones que permite la primera bola.
+	Esta última no logré representar de una muy buena forma en programación
+	dinámica, y me quedó un algoritmo de complejidad $O(n^3)$, ya que necesitaba
+	borrar los resultados guardados en cada test case.
+
+	Sin embargo, después de un intento que resultó en \textbf{Time Limit Exceeded},
+	logré hacer un pequeño cambio que me ayudó a ganar tiempo (alrededor de 2.5
+	segundos), pero la respuesta fue \textbf{Wrong Answer}.
+
+	Revisé dónde podía haber fallado mi implementación, pero no pude dar con la
+	falla durante la competencia.
+
+
+
+
+\chapter{Algoritmos incompletos}
+
+
+\section{Onion Layers}
+
+	Leí el algoritmo de búsqueda de \emph{Graham}, el cual no sólo me pareció
+	interesante por su complejidad ($O(n \log n)$ al ordenar y $O(n)$ al elegir
+	el conjunto de puntos), sino que pensaba que podía adaptar mi solución de
+	\hyperref[median_plane]{``Median on the Plane''} para llegar a la solución.
+
+	Pero tenía sólo 40 minutos para que acabara la competencia, y no me alcanzó
+	el tiempo diseñar la parte correspondiente a la eliminación de los puntos ya
+	hallados en el convex hull.
+	Por tanto, quedó incompleto el algoritmo.
